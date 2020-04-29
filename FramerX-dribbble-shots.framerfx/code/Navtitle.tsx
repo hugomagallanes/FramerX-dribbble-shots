@@ -1,97 +1,152 @@
-import * as React from "react";
+import * as React from "react"
 import {
-	Frame,
-	Stack,
-	Scroll,
-	StackProperties,
-	addPropertyControls,
+    Frame,
+    Stack,
+    Scroll,
+    StackProperties,
+    addPropertyControls,
     ControlType,
     useMotionValue,
-    useAnimation
-} from "framer";
+    useAnimation,
+} from "framer"
 
 // Imports from Web Design System
-import { Text } from "@framer/dailymotion.web-design-system/code/01_Foundations/Text";
+// import { Text } from "@framer/dailymotion.web-design-system/code/01_Foundations/Text";
 
-const items = ["Featured", "News", "Sports", "Entertainment", "Music", "Item 1", "Item 2"];
+const items = ["Featured", "News", "Sports", "Entertainment", "Music"]
 
-// let controls = useAnimation()
+/* --------------------------- HELPER COMPONENT ------------------------------ */
+const Titles = ({ text, onTap, ...props }) => {
+    // Sets up ref
+    const ref = React.useRef(null)
 
+    const handleTap = () => {
+        onTap(ref.current)
+    }
+
+    // Renders element
+    return (
+        <Frame
+            {...props}
+            ref={ref}
+            onTap={handleTap}
+            width="auto"
+            height={52}
+            background="lightgrey"
+        >
+            <div>{text}</div>
+        </Frame>
+    )
+}
 
 export function Navtitle(props) {
-    const { ...rest } = props;
+	const { currentlySelected, ...rest } = props
+	
 
-    const scrollY = useMotionValue(0)
+	/* --------------------------- HELPER FUNCTIONS ------------------------------ */
 
-    
-    /* -------------------------------- STATE ------------------------------------ */
+	const CalculateXPos = (index) => {
+		let posX
+
+		if (index === 0) {
+			posX = 0
+		} else if (index===1) {
+			posX = -138
+		} else if (index ===2) {
+			posX = 227
+		}
+
+		return posX
+	}
+
+	/* -------------------------------- STATE ------------------------------------ */
+	
+	// Initiates state
     const [state, setState] = React.useState({
-        selected: 0,
-    })
+        selected: currentlySelected,
+        scrollPosition: 0,
+	})
+	
+	// Sets initial state
+	React.useEffect(() => {
+		let index = currentlySelected
+		let xPos = CalculateXPos(currentlySelected)
+	
+		// Shares value
+		props.onValueChange(index)
+
+		// Update state
+		setState({
+			selected: index,
+			scrollPosition: xPos
+		})
+		
+    },[currentlySelected])
 
     /* ---------------------------- EVENT HANDLERS ------------------------------- */
 
-    const handleTap = (item, index) => {
+    const handleTap = (element, index) => {
 
-        console.log("Item xPos: " + item)
+		console.log(index, element.offsetLeft)
+		
+		// Save index value
+		let tappedItem = index
+		
+		// Shares value 
+		props.onValueChange(tappedItem)
 
-        let tappedItem = index
-
-        // sets state
+        // Updates state
         setState({
-            selected: tappedItem
+            selected: tappedItem,
+            scrollPosition: -element.offsetLeft + 16,
         })
     }
 
-
-    const onScroll = (info) => {
-        console.log(info.offset)
-      }
-    
     /* ----------------------------- 🖼 RENDER ----------------------------------- */
-	return (
-        <Scroll 
-        {...rest}
-        direction="horizontal"
-        backgroundColor="teal"
-        // dragEnabled={false}
-        wheelEnabled={false}
-        onScroll={onScroll}
-        // contentOffsetY={scrollY}
-        // scrollAnimate={controls}
-        scrollAnimate = {{
-            x: 16,
-            transition: { ease: "easeInOut", duration: 1 },
-        }}
+    return (
+        <Scroll
+            // {...rest}
+            direction="horizontal"
+            width={375}
+            background="teal"
+            backgroundColor="lightpink"
         >
-			<Stack
-				direction="horizontal"
+            <Stack
+                direction="horizontal"
                 alignment="start"
-                backgroundColor="lightpink"
+                gap={20}
+                // backgroundColor="lightpink"
                 width="100%"
-                // paddingLeft={16}
-			>
-				{items.map((item, index) => {
-					return (
-						<Text
-							text={item}
-							role="heading"
-                            sizeHeading={state.selected === index ? "h1" : "h3" }
-                            color={state.selected === index ? "#0D0D0D" : "#7E7E7E" }
-							backgroundColor="transparent"
-                            width="auto"
-                            verticalTextAlign="center"
-                            onTap={()=>handleTap(item, index)}
-						/>
-					);
-				})}
-			</Stack>
-		</Scroll>
-	);
+                animate={{ left: state.scrollPosition }}
+            >
+                {items.map((item, index) => {
+                    return (
+                        <Titles
+                            key={`${props.id}_option_${index}`}
+                            text={item}
+                            style={{
+                                color:
+                                    state.selected === index
+                                        ? "#0D0D0D"
+                                        : "#7E7E7E",
+                                fontFamily: "Retina",
+                                fontSize: "28px",
+                                // fontSize: state.selected === index ? "28px" : "20px",
+                                fontWeight:
+                                    state.selected === index ? "900" : "700",
+                            }}
+                            onTap={element => handleTap(element, index)}
+                        ></Titles>
+                    )
+                })}
+            </Stack>
+        </Scroll>
+    )
 }
 
 Navtitle.defaultProps = {
-	height: 52,
+    height: 52,
 	width: 375,
-	// backgroundColor: "white",
-};
+	currentlySelected: 2,
+	onValueChange: value => null
+}

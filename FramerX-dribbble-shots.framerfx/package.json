@@ -13,7 +13,7 @@
 	},
 	"author": "Hugo Magalhaes",
 	"dependencies": {
-		"@framer/dailymotion.web-design-system": "^1.13.0",
+		"@framer/dailymotion.web-design-system": "^1.14.0",
 		"@framer/kasimir.iphone-x-kit": "^1.21.0"
 	}
 }
