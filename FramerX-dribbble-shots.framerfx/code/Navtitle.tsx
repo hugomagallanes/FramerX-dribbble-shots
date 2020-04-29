@@ -31,7 +31,7 @@ const Titles = ({ text, onTap, ...props }) => {
             ref={ref}
             onTap={handleTap}
             width="auto"
-            height={52}
+            height="auto"
             background="lightgrey"
         >
             <div>{text}</div>
@@ -64,7 +64,7 @@ export function Navtitle(props) {
 	// Initiates state
     const [state, setState] = React.useState({
         selected: currentlySelected,
-        scrollPosition: 0,
+        scrollPosition: 16,
 	})
 	
 	// Sets initial state
@@ -73,12 +73,12 @@ export function Navtitle(props) {
 		let xPos = CalculateXPos(currentlySelected)
 	
 		// Shares value
-		props.onValueChange(index)
+		// props.onValueChange(index)
 
 		// Update state
 		setState({
 			selected: index,
-			scrollPosition: xPos
+			scrollPosition: xPos + 16
 		})
 		
     },[currentlySelected])
@@ -105,7 +105,7 @@ export function Navtitle(props) {
     /* ----------------------------- 🖼 RENDER ----------------------------------- */
     return (
         <Scroll
-            // {...rest}
+            {...rest}
             direction="horizontal"
             width={375}
             background="teal"
@@ -113,11 +113,18 @@ export function Navtitle(props) {
         >
             <Stack
                 direction="horizontal"
-                alignment="start"
+                distribution="start"
+                alignment="center"
                 gap={20}
-                // backgroundColor="lightpink"
+                backgroundColor="lightpink"
+                // height={52}
                 width="100%"
+                initial={{ left: state.scrollPosition }}
                 animate={{ left: state.scrollPosition }}
+                transition={{
+                    ease: "easeOut",
+                    duration: 0.3
+                }}
             >
                 {items.map((item, index) => {
                     return (
@@ -130,10 +137,10 @@ export function Navtitle(props) {
                                         ? "#0D0D0D"
                                         : "#7E7E7E",
                                 fontFamily: "Retina",
-                                fontSize: "28px",
-                                // fontSize: state.selected === index ? "28px" : "20px",
+                                fontSize: state.selected === index ? "28px" : "20px",
                                 fontWeight:
                                     state.selected === index ? "900" : "700",
+                                verticalAlign: "baseline",
                             }}
                             onTap={element => handleTap(element, index)}
                         ></Titles>
@@ -147,6 +154,6 @@ export function Navtitle(props) {
 Navtitle.defaultProps = {
     height: 52,
 	width: 375,
-	currentlySelected: 2,
+	currentlySelected: 0,
 	onValueChange: value => null
 }

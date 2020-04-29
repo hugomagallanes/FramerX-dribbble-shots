@@ -82,6 +82,11 @@ export const Navtitle: Override = () => {
     }
 }
 
+export const DisabledScroll: Override = () => {
+    return {
+        dragEnabled: false,
+    }
+}
 
 // Featured: 0
 // News: -1319

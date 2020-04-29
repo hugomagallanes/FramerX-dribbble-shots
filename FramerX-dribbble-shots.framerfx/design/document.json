@@ -155,10 +155,7 @@
             "codeComponentProps" : {
 
             },
-            "codeOverrideEnabled" : true,
-            "codeOverrideFile" : ".\/Overrides.tsx",
-            "codeOverrideIdentifier" : ".\/Overrides.tsx_Navtitle",
-            "codeOverrideName" : "Navtitle",
+            "codeOverrideEnabled" : false,
             "constraintsLocked" : false,
             "deviceType" : null,
             "exportOptions" : [
@@ -272,7 +269,7 @@
         "exportOptions" : [
 
         ],
-        "fillColor" : "white",
+        "fillColor" : "hsl(0, 0%, 66%)",
         "fillEnabled" : true,
         "fillImage" : null,
         "fillImageOriginalName" : null,
@@ -422,7 +419,10 @@
               "setContent" : true,
               "setLanguage" : "x6lgtp"
             },
-            "codeOverrideEnabled" : false,
+            "codeOverrideEnabled" : true,
+            "codeOverrideFile" : ".\/Overrides.tsx",
+            "codeOverrideIdentifier" : ".\/Overrides.tsx_DisabledScroll",
+            "codeOverrideName" : "DisabledScroll",
             "constraintsLocked" : false,
             "deviceType" : null,
             "exportOptions" : [
