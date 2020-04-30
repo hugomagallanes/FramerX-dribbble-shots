@@ -87,8 +87,6 @@ export function Navtitle(props) {
 
 	const handleTap = (element, index) => {
 
-
-
 		onValueChange(index)
 
 		// Updates selectedItem with tapped item
