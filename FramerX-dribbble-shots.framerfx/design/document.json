@@ -3017,6 +3017,15 @@
                       "type" : "unstyled"
                     }
                   ],
+                  "cached" : {
+                    "html" : "<div class='DraftEditor-alignLeft'><div data-offset-key=\"fv66c-0-0\" class=\"public-DraftStyleDefault-block public-DraftStyleDefault-ltr\"><span data-offset-key=\"fv66c-0-0\" style=\"tab-size:4;font-family:&quot;Retina-Bold&quot;, &quot;Retina&quot;, serif;-webkit-text-fill-color:rgb(13, 13, 13);font-size:18px;letter-spacing:0px;line-height:1.1;font-weight:700\"><span data-text=\"true\">Once Upon a Time in Hollywood - Official Trailer<\/span><\/span><\/div><\/div>",
+                    "os" : "macos 10_15 framerx",
+                    "size" : {
+                      "height" : 38,
+                      "width" : 344
+                    },
+                    "width" : 343
+                  },
                   "entityMap" : {
 
                   }
@@ -3154,7 +3163,6 @@
             "navigationTransitionBackdropColor" : "rgba(4,4,15,.4)",
             "navigationTransitionDirection" : "left",
             "opacity" : 1,
-            "originalFilename" : "item_01@2x.png",
             "originalid" : null,
             "parentid" : "ymIGOfm9V",
             "previewSettings" : null,
@@ -3230,7 +3238,6 @@
                 "navigationTransitionBackdropColor" : "rgba(4,4,15,.4)",
                 "navigationTransitionDirection" : "left",
                 "opacity" : 1,
-                "originalFilename" : "timestamp@2x.png",
                 "originalid" : null,
                 "parentid" : "AP6CXda2N",
                 "previewSettings" : null,
