@@ -8,6 +8,29 @@ import {
 } from "framer";
 import { Image, Check_icon } from "./canvas";
 
+import ApolloClient from 'apollo-boost';
+import { gql } from "apollo-boost";
+
+const client = new ApolloClient({
+	uri: 'https://48p1r2roz4.sse.codesandbox.io',
+  });
+
+  client
+  .query({
+    query: gql`
+      {
+        rates(currency: "USD") {
+          currency
+        }
+      }
+    `
+  })
+  .then(result => console.log(result));
+
+
+
+  
+
 const Thumbnail = (props) => {
 	return (
 		<Frame
@@ -205,10 +228,10 @@ export const Card = (props) => {
 					cardHeight: updatedHeight,
 				}));
 
-				console.log(
-					`Total height: ${channelDetail.current.offsetParent.offsetTop}`
-				);
-				console.log(`Total height: ${updatedHeight}`);
+				// console.log(
+				// 	`Total height: ${channelDetail.current.offsetParent.offsetTop}`
+				// );
+				// console.log(`Total height: ${updatedHeight}`);
 			});
 	}, [videoID, hasTopic]);
 
