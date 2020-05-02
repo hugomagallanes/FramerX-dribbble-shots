@@ -48,6 +48,9 @@ const Topic = (props) => {
 			gap={4}
 			height={24 + 15 + 2}
 			width="100%"
+			style={{
+				marginTop: 12,
+			}}
 		>
 			<div
 				style={{
@@ -167,12 +170,18 @@ export const Card = (props) => {
 
 				let updatedHeight;
 				let channelDetailHeight = 17
-				let channelDetailMaxY = channelDetail.current.offsetParent.offsetTop + channelDetailHeight;
+				let channelDetailMaxY = channelDetail.current.offsetParent.offsetTop + channelDetailHeight
+				let marginBottom = 20
 
 				updatedHeight = channelDetailMaxY;
 
 				// Adds extra height if topic button is visible
-				hasTopic ? (updatedHeight += 43) : updatedHeight
+				// hasTopic ? (updatedHeight += 43) : (updatedHeight + marginBottom)
+				if (props.hasTopic) {
+					updatedHeight += 43 + marginBottom
+				} else {
+					updatedHeight += marginBottom
+				}
 		
 				// Updates state
 				setState((prevState) => ({
@@ -180,7 +189,7 @@ export const Card = (props) => {
 					cardHeight: updatedHeight,
 				}));
 
-				// console.log(channelDetail)
+				console.log(`Total height: ${channelDetail.current.offsetParent.offsetTop}`)
 				console.log(`Total height: ${updatedHeight}`)
 			});
 	}, [videoID, hasTopic]);
@@ -193,8 +202,8 @@ export const Card = (props) => {
 				direction="vertical"
 				alignment="start"
 				distribution="start"
-				// backgroundColor="teal"
-				gap={8}
+				backgroundColor="white"
+				gap={4}
 				height="100%"
 				width="100%"
 				// paddingTop = {80}
@@ -205,7 +214,7 @@ export const Card = (props) => {
 				<div
 					style={{
 						display: "inline-block",
-						background: "lightgrey",
+						// background: "lightgrey",
 						width: 343,
 						fontFamily: "Retina",
 						fontSize: 11,
