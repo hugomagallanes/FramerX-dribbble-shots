@@ -8,55 +8,6 @@ import {
 } from "framer";
 import { Image, Check_icon } from "./canvas";
 
-// ApolloGraphQL - Setup client
-import { ApolloClient, ApolloLink, InMemoryCache, HttpLink } from 'apollo-boost';
-
-// ApolloGraphQL - Use custom hooks
-import gql from "graphql-tag";
-import { ApolloProvider, useQuery } from "@apollo/react-hooks";
-
-
-
-// Sets custom endpoint URL 
-const httpLink = new HttpLink({ uri: 'https://api.example.com/graphql' });
-
-
-const authLink = new ApolloLink((operation, forward) => {
-	// Retrieve the authorization token from local storage.
-	const token = localStorage.getItem('auth_token');
-  
-	// Use the setContext method to set the HTTP headers.
-	operation.setContext({
-	  headers: {
-		authorization: token ? `Bearer ${token}` : ''
-	  }
-	});
-  
-	// Call the next link in the middleware chain.
-	return forward(operation);
-  });
-
-
-// Instantiates a new client 
-const client = new ApolloClient({
-  link: httpLink,
-  cache: new InMemoryCache()
-});
-
-
-
-
-
-
-
-const EXCHANGE_RATES = gql`
-	{
-		rates(currency: "USD") {
-			currency
-			rate
-		}
-	}
-`;
 
 const Thumbnail = (props) => {
 	return (
@@ -163,33 +114,6 @@ const Topic = (props) => {
 	);
 };
 
-const Title = (props) => {
-	const { loading, error, data } = useQuery(EXCHANGE_RATES);
-
-	console.log("Show data?");
-	console.log(data);
-
-	return (
-		<div
-			style={{
-				display: "inline-block",
-				// background: "lightgrey",
-				width: 343,
-				fontFamily: "Retina",
-				fontSize: 18,
-				fontWeight: 800,
-				textAlign: "left",
-				color: "#0D0D0D",
-				marginLeft: 16,
-				marginRight: 16,
-			}}
-		>
-			{props.text}
-			{/* {data.dog[0].breed} */}
-		</div>
-	);
-};
-
 export const Card = (props) => {
 	const { videoID, hasTopic, topicLabel, ...rest } = props;
 
@@ -222,19 +146,6 @@ export const Card = (props) => {
 
 		// console.log(output);
 	}
-
-	/* ---------------------------- STATE GRAPHQL --------------------------------- */
-
-	// const { loading, error, data } = useQuery(gql`
-	// 	{
-	// 		rates(currency: "USD") {
-	// 			currency
-	// 			rate
-	// 		}
-	// 	}
-	// `);
-
-	// console.log(data)
 
 	/* -------------------------------- STATE ------------------------------------ */
 
@@ -306,70 +217,83 @@ export const Card = (props) => {
 
 	return (
 		<Frame {...rest} height={state.cardHeight}>
-			<ApolloProvider client={client}>
+			<Stack
+				direction="vertical"
+				alignment="start"
+				distribution="start"
+				backgroundColor="white"
+				gap={4}
+				height="100%"
+				width="100%"
+				// paddingTop = {80}
+			>
+				<Thumbnail image={state.image} duration={state.duration}></Thumbnail>
+
+				{/* Card details */}
+				<div
+					style={{
+						display: "inline-block",
+						// background: "lightgrey",
+						width: 343,
+						fontFamily: "Retina",
+						fontSize: 11,
+						fontWeight: 600,
+						textAlign: "left",
+						color: "#7E7E7E",
+						marginLeft: 16,
+						marginRight: 16,
+						marginTop: 6,
+					}}
+				>
+					{state.uploadTime}
+				</div>
+				<div
+					style={{
+						display: "inline-block",
+						// background: "lightgrey",
+						width: 343,
+						fontFamily: "Retina",
+						fontSize: 18,
+						fontWeight: 800,
+						textAlign: "left",
+						color: "#0D0D0D",
+						marginLeft: 16,
+						marginRight: 16,
+					}}
+				>
+					{state.title}
+				</div>
+
+				{/* Channel & Verified icon */}
 				<Stack
-					direction="vertical"
+					direction="horizontal"
 					alignment="start"
 					distribution="start"
-					backgroundColor="white"
 					gap={4}
-					height="100%"
-					width="100%"
-					// paddingTop = {80}
+					height={16}
 				>
-					<Thumbnail image={state.image} duration={state.duration}></Thumbnail>
-
-					{/* Card details */}
 					<div
+						ref={channelDetail}
 						style={{
 							display: "inline-block",
 							// background: "lightgrey",
-							width: 343,
+							width: "auto",
 							fontFamily: "Retina",
-							fontSize: 11,
-							fontWeight: 600,
+							fontSize: 13,
+							fontWeight: 700,
 							textAlign: "left",
 							color: "#7E7E7E",
 							marginLeft: 16,
-							marginRight: 16,
-							marginTop: 6,
 						}}
 					>
-						{state.uploadTime}
+						{state.channel}
 					</div>
-					<Title text={state.title}></Title>
-
-					{/* Channel & Verified icon */}
-					<Stack
-						direction="horizontal"
-						alignment="start"
-						distribution="start"
-						gap={4}
-						height={16}
-					>
-						<div
-							ref={channelDetail}
-							style={{
-								display: "inline-block",
-								// background: "lightgrey",
-								width: "auto",
-								fontFamily: "Retina",
-								fontSize: 13,
-								fontWeight: 700,
-								textAlign: "left",
-								color: "#7E7E7E",
-								marginLeft: 16,
-							}}
-						>
-							{state.channel}
-						</div>
-						<Check_icon />
-					</Stack>
-
-					{/* {hasTopic && renderTopic } */}
-					{hasTopic && <Topic label={topicLabel}></Topic>}
+					<Check_icon />
 				</Stack>
-			</ApolloProvider>
+
+				{/* {hasTopic && renderTopic } */}
+				{hasTopic && <Topic label={topicLabel}></Topic>}
+			</Stack>
 		</Frame>
 	);
 };
