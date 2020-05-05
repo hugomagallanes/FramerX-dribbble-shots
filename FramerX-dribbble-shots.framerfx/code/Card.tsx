@@ -83,31 +83,6 @@ const client = new ApolloClient({
 	cache: new InMemoryCache(),
 });
 
-/* ---------------------------- GRAPHQL QUERY  ------------------------------- */
-
-const QUERY = gql`
-	{
-		video(xid: "x7tn87a") {
-			id
-			title
-			thumbnailURL(size: "x1080")
-			xid
-			duration
-			channel {
-				name
-				accountType
-			}
-			topics(whitelistedOnly: true, first: 2, page: 1) {
-				edges {
-					node {
-						name
-					}
-				}
-			}
-		}
-	}
-`;
-
 /* --------------------------- HELPER FUNCTIONS ------------------------------ */
 
 // Formats seconds into hh:mm:ss
@@ -326,14 +301,37 @@ const Info = (props) => {
 
 // Card structure
 const Content = (props) => {
-	const { videoID, hasTopic, topicLabel, ...rest } = props;
+	// const { videoID, ...rest } = props;
+
+	/* ---------------------------- GRAPHQL QUERY  ------------------------------- */
+	const QUERY = gql`
+		{
+			video(xid: ${props.videoID}) {
+				id
+				title
+				thumbnailURL(size: "x1080")
+				xid
+				duration
+				channel {
+					name
+					accountType
+				}
+				topics(whitelistedOnly: true, first: 2, page: 1) {
+					edges {
+						node {
+							name
+						}
+					}
+				}
+			}
+		}
+	`;
 
 	const { loading, error, data } = useQuery(QUERY);
 
 	if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error :(</p>;
-        
-	
+	if (error) return <p>Error :(</p>;
+
 	return (
 		<Stack
 			direction="vertical"
@@ -345,7 +343,10 @@ const Content = (props) => {
 			width="100%"
 		>
 			{/* Card thumbnail */}
-			<Thumbnail image={data.video.thumbnailURL} duration={formatDuration(data.video.duration)}></Thumbnail>
+			<Thumbnail
+				image={data.video.thumbnailURL}
+				duration={formatDuration(data.video.duration)}
+			></Thumbnail>
 
 			{/* Card info */}
 			<Info
@@ -358,20 +359,16 @@ const Content = (props) => {
 	);
 };
 
-
-
-
-
 /* ----------------------------- CONTAINER ----------------------------------- */
 
 export const Card = (props) => {
-	const { videoID, hasTopic, topicLabel, ...rest } = props;
+	const { videoID, ...rest } = props;
 
 	/* ----------------------------- 🖼 RENDER ----------------------------------- */
 	return (
 		<Frame {...rest}>
 			<ApolloProvider client={client}>
-				<Content></Content>
+				<Content videoID={videoID}></Content>
 			</ApolloProvider>
 		</Frame>
 	);
@@ -381,7 +378,7 @@ Card.defaultProps = {
 	height: 300,
 	width: 375,
 	background: "white",
-	videoID: "",
+	videoID: "x7tlu48",
 	hasTopic: true,
 	topicLabel: "Topic",
 };
