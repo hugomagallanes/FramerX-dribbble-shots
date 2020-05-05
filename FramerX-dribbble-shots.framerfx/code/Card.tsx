@@ -8,54 +8,95 @@ import {
 } from "framer";
 import { Image, Check_icon } from "./canvas";
 
-// ApolloGraphQL - Setup client
-import { ApolloClient, ApolloLink, InMemoryCache, HttpLink } from 'apollo-boost';
+// Apollo Client setup
+import { ApolloClient } from "apollo-client";
+import { createHttpLink } from "apollo-link-http";
+import { setContext } from "apollo-link-context";
+import { InMemoryCache } from "apollo-cache-inmemory";
 
-// ApolloGraphQL - Use custom hooks
+// Apollo Provider setup
 import gql from "graphql-tag";
 import { ApolloProvider, useQuery } from "@apollo/react-hooks";
 
+/* -------------------------- FETCH OAUTH TOKEN  ----------------------------- */
+const fetchToken = async () => {
+	let key = "3cce59be389016683058";
+	let secret = "4c90b07044ea0ff78c9bc6157c4b9c69a4e8d455";
+
+	// Connects to server
+	let response = await fetch(
+		"https://graphql.api.dailymotion.com/oauth/token",
+		{
+			method: "POST",
+			body:
+				"grant_type=client_credentials&client_id=" +
+				key +
+				"&client_secret=" +
+				secret,
+			headers: {
+				"Content-Type": "application/x-www-form-urlencoded",
+			},
+		}
+	);
+
+	// Parses response into JSON
+	let data = await response.json();
+
+	// Stores token in local storage
+	localStorage.setItem("token", data.access_token);
 
 
-// Sets custom endpoint URL 
-const httpLink = new HttpLink({ uri: 'https://api.example.com/graphql' });
+	console.log(`Bearer ${data.access_token}`)
+	// Returns oauth token
+	return `Bearer ${data.access_token}`;
+};
 
+// fetchToken()
 
-const authLink = new ApolloLink((operation, forward) => {
-	// Retrieve the authorization token from local storage.
-	const token = localStorage.getItem('auth_token');
-  
-	// Use the setContext method to set the HTTP headers.
-	operation.setContext({
-	  headers: {
-		authorization: token ? `Bearer ${token}` : ''
-	  }
-	});
-  
-	// Call the next link in the middleware chain.
-	return forward(operation);
-  });
+/* ------------------------- APOLLO CLIENT SETUP  ---------------------------- */
 
-
-// Instantiates a new client 
-const client = new ApolloClient({
-  link: httpLink,
-  cache: new InMemoryCache()
+// Establishes link
+const httpLink = createHttpLink({
+	uri: "https://graphql.api.dailymotion.com",
 });
 
 
+// Gets oauth token from api
+const asyncAuthLink = setContext((request) => fetchToken());
 
 
+// Passes oauth token to header
+const authLink = setContext((request, previousContext) => ({
+	headers: { authorization: `Bearer ${localStorage.getItem("token")}` },
+}));
 
+// Builds Apollo client request
+const client = new ApolloClient({
+	link: authLink.concat(httpLink),
+	cache: new InMemoryCache(),
+});
 
-
-const EXCHANGE_RATES = gql`
-	{
-		rates(currency: "USD") {
-			currency
-			rate
+const QUERY = gql`
+{
+	video(xid: "x7tn87a") {
+	  id
+	  title
+	  thumbnailURL(size: "x1080")
+	  xid
+	  duration
+	  channel {
+		name
+		accountType
+	  }
+	  topics(whitelistedOnly: true, first: 2, page: 1) {
+		edges {
+		  node {
+			name
+		  }
 		}
+	  } 
 	}
+  }
 `;
 
 const Thumbnail = (props) => {
@@ -164,9 +205,9 @@ const Topic = (props) => {
 };
 
 const Title = (props) => {
-	const { loading, error, data } = useQuery(EXCHANGE_RATES);
+	const { loading, error, data } = useQuery(QUERY);
 
-	console.log("Show data?");
+	console.log("Show data? Yes?");
 	console.log(data);
 
 	return (
@@ -219,88 +260,82 @@ export const Card = (props) => {
 		output = `${minutes}:${seconds}`;
 
 		return output;
-
-		// console.log(output);
 	}
 
 	/* ---------------------------- STATE GRAPHQL --------------------------------- */
 
-	// const { loading, error, data } = useQuery(gql`
-	// 	{
-	// 		rates(currency: "USD") {
-	// 			currency
-	// 			rate
-	// 		}
-	// 	}
-	// `);
 
-	// console.log(data)
 
 	/* -------------------------------- STATE ------------------------------------ */
 
-	const [state, setState] = React.useState({
-		// id: "x7tlu48",
-		id: videoID,
-		image: "",
-		timestamp: "",
-		uploadTime: "10 hours ago",
-		title: "Once Upon a Time in Hollywood - Official Trailer",
-		channel: "FanReviews",
-		duration: "01:01",
-		cardHeight: 300,
-	});
+	// const [state, setState] = React.useState({
+	// 	// id: "x7tlu48",
+	// 	id: videoID,
+	// 	image: "",
+	// 	timestamp: "",
+	// 	uploadTime: "10 hours ago",
+	// 	title: "Once Upon a Time in Hollywood - Official Trailer",
+	// 	channel: "FanReviews",
+	// 	duration: "01:01",
+	// 	cardHeight: 300,
+	// });
+
+	// React.useEffect(() => {
+
+	// }, [videoID]);
+
 
 	// Fetches content from API
-	React.useEffect(() => {
-		fetch(
-			`https://api.dailymotion.com/video/${videoID}}?fields=title%2Cthumbnail_1080_url%2Cowner.screenname%2Cid%2Cduration`
-		)
-			.then((response) => response.json())
-			.then((data) => {
-				setState((prevState) => ({
-					...prevState,
-					id: `${videoID}`,
-					image: data["thumbnail_1080_url"],
-					title: data.title,
-					channel: data["owner.screenname"],
-					duration: formatDuration(data.duration),
-				}));
-				// console.log(formatDuration(data.duration));
-			})
-			.then(() => {
-				// Adjusts card height based on content
+	// React.useEffect(() => {
+	// 	fetch(
+	// 		`https://api.dailymotion.com/video/${videoID}}?fields=title%2Cthumbnail_1080_url%2Cowner.screenname%2Cid%2Cduration`
+	// 	)
+	// 		.then((response) => response.json())
+	// 		.then((data) => {
+	// 			setState((prevState) => ({
+	// 				...prevState,
+	// 				id: `${videoID}`,
+	// 				image: data["thumbnail_1080_url"],
+	// 				title: data.title,
+	// 				channel: data["owner.screenname"],
+	// 				duration: formatDuration(data.duration),
+	// 			}));
+	// 			// console.log(formatDuration(data.duration));
+	// 		})
+	// 		.then(() => {
+	// 			// Adjusts card height based on content
 
-				// Check if components has been mounted
-				if (!channelDetail.current) return;
+	// 			// Check if components has been mounted
+	// 			if (!channelDetail.current) return;
 
-				let updatedHeight;
-				let channelDetailHeight = 17;
-				let channelDetailMaxY =
-					channelDetail.current.offsetParent.offsetTop + channelDetailHeight;
-				let marginBottom = 20;
+	// 			let updatedHeight;
+	// 			let channelDetailHeight = 17;
+	// 			let channelDetailMaxY =
+	// 				channelDetail.current.offsetParent.offsetTop + channelDetailHeight;
+	// 			let marginBottom = 20;
 
-				updatedHeight = channelDetailMaxY;
+	// 			updatedHeight = channelDetailMaxY;
 
-				// Adds extra height if topic button is visible
-				// hasTopic ? (updatedHeight += 43) : (updatedHeight + marginBottom)
-				if (props.hasTopic) {
-					updatedHeight += 43 + marginBottom;
-				} else {
-					updatedHeight += marginBottom;
-				}
+	// 			// Adds extra height if topic button is visible
+	// 			// hasTopic ? (updatedHeight += 43) : (updatedHeight + marginBottom)
+	// 			if (props.hasTopic) {
+	// 				updatedHeight += 43 + marginBottom;
+	// 			} else {
+	// 				updatedHeight += marginBottom;
+	// 			}
 
-				// Updates state
-				setState((prevState) => ({
-					...prevState,
-					cardHeight: updatedHeight,
-				}));
+	// 			// Updates state
+	// 			setState((prevState) => ({
+	// 				...prevState,
+	// 				cardHeight: updatedHeight,
+	// 			}));
 
-				// console.log(
-				// 	`Total height: ${channelDetail.current.offsetParent.offsetTop}`
-				// );
-				// console.log(`Total height: ${updatedHeight}`);
-			});
-	}, [videoID, hasTopic]);
+	// 			// console.log(
+	// 			// 	`Total height: ${channelDetail.current.offsetParent.offsetTop}`
+	// 			// );
+	// 			// console.log(`Total height: ${updatedHeight}`);
+	// 		});
+	// }, [videoID, hasTopic]);
 
 	/* ----------------------------- 🖼 RENDER ----------------------------------- */
 
