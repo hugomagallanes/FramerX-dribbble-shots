@@ -163,10 +163,11 @@ const Topic = (props) => {
 			alignment="start"
 			distribution="start"
 			gap={4}
-			height={24 + 15 + 2}
+			height={24 + 15 + 2 + 24}
 			width="100%"
 			style={{
 				marginTop: 12,
+				// marginBottom: 24,
 			}}
 		>
 			<div
@@ -216,18 +217,23 @@ const Topic = (props) => {
 };
 
 const Info = (props) => {
+
+
 	const fontStyle = {
 		fontFamily: "Retina",
 	};
+
+	const channelDetail = React.useRef(null);
 
 	return (
 		<Stack
 			direction="vertical"
 			alignment="start"
 			distribution="start"
-			backgroundColor="white"
+			// backgroundColor="lightpink"
+			backgroundColor="transparent"
 			gap={4}
-			height="100%"
+			height="auto"
 			width="100%"
 		>
 			<div
@@ -274,7 +280,7 @@ const Info = (props) => {
 				height={16}
 			>
 				<div
-					// ref={channelDetail}
+					ref={channelDetail}
 					style={{
 						display: "inline-block",
 						// background: "lightgrey",
@@ -291,17 +297,15 @@ const Info = (props) => {
 				</div>
 				<Check_icon />
 			</Stack>
-
-			{/* {hasTopic && <Topic label={"topicLabel"}></Topic>} */}
+			
 			{props.topic != null && <Topic label={props.topic}></Topic>}
-			{/* <Topic label={props.topic}></Topic> */}
 		</Stack>
 	);
 };
 
 // Card structure
 const Content = (props) => {
-	// const { videoID, ...rest } = props;
+
 
 	/* ---------------------------- GRAPHQL QUERY  ------------------------------- */
 	const QUERY = gql`
@@ -329,15 +333,20 @@ const Content = (props) => {
 
 	const { loading, error, data } = useQuery(QUERY);
 
+	console.log(data)
+
 	if (loading) return <p>Loading...</p>;
 	if (error) return <p>Error :(</p>;
+
+	/* ----------------------------- 🖼 RENDER ----------------------------------- */	
+	
 
 	return (
 		<Stack
 			direction="vertical"
 			alignment="start"
 			distribution="start"
-			backgroundColor="white"
+			backgroundColor="transparent"
 			gap={4}
 			height="100%"
 			width="100%"
@@ -353,7 +362,8 @@ const Content = (props) => {
 				uploadTime="10 hours ago"
 				title={data.video.title}
 				channel={data.video.channel.name}
-				topic={data.video.topics.edges[0].node.name}
+				// topic={data.video.topics.edges >= 1 ? data.video.topics.edges[0].node.name : null}
+				topic={data.video.topics.edges.length > 0 ? data.video.topics.edges[0].node.name : null}
 			></Info>
 		</Stack>
 	);
@@ -364,9 +374,10 @@ const Content = (props) => {
 export const Card = (props) => {
 	const { videoID, ...rest } = props;
 
+
 	/* ----------------------------- 🖼 RENDER ----------------------------------- */
 	return (
-		<Frame {...rest}>
+		<Frame {...rest} >
 			<ApolloProvider client={client}>
 				<Content videoID={videoID}></Content>
 			</ApolloProvider>
@@ -375,12 +386,10 @@ export const Card = (props) => {
 };
 
 Card.defaultProps = {
-	height: 300,
+	height: 250,
 	width: 375,
 	background: "white",
 	videoID: "x7tlu48",
-	hasTopic: true,
-	topicLabel: "Topic",
 };
 
 addPropertyControls(Card, {
@@ -390,20 +399,20 @@ addPropertyControls(Card, {
 		placeholder: "Enter video id",
 		defaultValue: "x7tlu48",
 	},
-	hasTopic: {
-		title: "Has Topic",
-		type: ControlType.Boolean,
-		enabledTitle: "Yes",
-		disabledTitle: "No",
-		defaultValue: true,
-	},
-	topicLabel: {
-		title: "Topic label",
-		type: ControlType.String,
-		placeholder: "Enter topic label",
-		defaultValue: "Topic",
-		hidden(props) {
-			return props.hasTopic === false;
-		},
-	},
+	// hasTopic: {
+	// 	title: "Has Topic",
+	// 	type: ControlType.Boolean,
+	// 	enabledTitle: "Yes",
+	// 	disabledTitle: "No",
+	// 	defaultValue: true,
+	// },
+	// topicLabel: {
+	// 	title: "Topic label",
+	// 	type: ControlType.String,
+	// 	placeholder: "Enter topic label",
+	// 	defaultValue: "Topic",
+	// 	hidden(props) {
+	// 		return props.hasTopic === false;
+	// 	},
+	// },
 });
