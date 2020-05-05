@@ -8,6 +8,8 @@ import {
 } from "framer";
 import { Image, Check_icon } from "./canvas";
 
+/* ------------------------------- IMPORTS  ---------------------------------- */
+
 // Apollo Client setup
 import { ApolloClient } from "apollo-client";
 import { createHttpLink } from "apollo-link-http";
@@ -18,10 +20,8 @@ import { InMemoryCache } from "apollo-cache-inmemory";
 import gql from "graphql-tag";
 import { ApolloProvider, useQuery } from "@apollo/react-hooks";
 
-
-import {Span} from "./Span"
-
 /* -------------------------- FETCH OAUTH TOKEN  ----------------------------- */
+
 const fetchToken = async () => {
 	let key = "3cce59be389016683058";
 	let secret = "4c90b07044ea0ff78c9bc6157c4b9c69a4e8d455";
@@ -48,20 +48,20 @@ const fetchToken = async () => {
 	// Stores token in local storage
 	localStorage.setItem("token", data.access_token);
 
-	console.log(`Bearer ${data.access_token}`);
+	// console.log(`Bearer ${data.access_token}`);
 	// Returns oauth token
 	return `Bearer ${data.access_token}`;
 };
 
-fetchToken()
+// Runs function
+fetchToken();
 
 /* ------------------------- APOLLO CLIENT SETUP  ---------------------------- */
 
-localStorage.setItem(
-	"manuallyEnteredToken",
-	"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhaWQiOiIzY2NlNTliZTM4OTAxNjY4MzA1OCIsInJvbCI6IiIsInNjbyI6IiIsImx0byI6ImIzTmRXMUlFQVIwSldoc0FEZ0lHVUJSSVRSZ0RDMEJYWHhBWURBIiwiYWluIjowLCJhZGciOjAsImlhdCI6MTU4ODY3NDA5OSwiZXhwIjoxNTg4NzEwMDY1LCJkbXYiOiIxIiwiYXRwIjpudWxsLCJjYWQiOjIsImN4cCI6MiwiY2F1IjoyLCJraWQiOiJBRjg0OURENzNBNTg2M0NEN0Q5N0QwQkFCMDcyMjQzQiJ9.iI5g1gtJHTJgI6tkPPz3Lug2UK_bjfzRPPl7SrMGvlU"
-);
-
+// localStorage.setItem(
+// 	"token",
+// 	"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhaWQiOiIzY2NlNTliZTM4OTAxNjY4MzA1OCIsInJvbCI6IiIsInNjbyI6IiIsImx0byI6ImIzTmRXMUlFQVIwSldoc0FEZ0lHVUJSSVRSZ0RDMEJYWHhBWURBIiwiYWluIjowLCJhZGciOjAsImlhdCI6MTU4ODY3NDA5OSwiZXhwIjoxNTg4NzEwMDY1LCJkbXYiOiIxIiwiYXRwIjpudWxsLCJjYWQiOjIsImN4cCI6MiwiY2F1IjoyLCJraWQiOiJBRjg0OURENzNBNTg2M0NEN0Q5N0QwQkFCMDcyMjQzQiJ9.iI5g1gtJHTJgI6tkPPz3Lug2UK_bjfzRPPl7SrMGvlU"
+// );
 
 // Establishes link
 const httpLink = createHttpLink({
@@ -73,8 +73,8 @@ const asyncAuthLink = setContext((request) => fetchToken());
 
 // Passes oauth token to header
 const authLink = setContext((request, previousContext) => ({
-	headers: { authorization: `Bearer ${localStorage.getItem("manuallyEnteredToken")}` },
 	// headers: { authorization: `Bearer ${localStorage.getItem("token")}` },
+	headers: { authorization: `Bearer ${localStorage.getItem("token")}` },
 }));
 
 // Builds Apollo client request
@@ -83,28 +83,57 @@ const client = new ApolloClient({
 	cache: new InMemoryCache(),
 });
 
+/* ---------------------------- GRAPHQL QUERY  ------------------------------- */
+
 const QUERY = gql`
-{
-	video(xid: "x7tn87a") {
-		id
-		title
-		thumbnailURL(size: "x1080")
-		xid
-		duration
-		channel {
-			name
-			accountType
-		}
-		topics(whitelistedOnly: true, first: 2, page: 1) {
-			edges {
-				node {
-					name
+	{
+		video(xid: "x7tn87a") {
+			id
+			title
+			thumbnailURL(size: "x1080")
+			xid
+			duration
+			channel {
+				name
+				accountType
+			}
+			topics(whitelistedOnly: true, first: 2, page: 1) {
+				edges {
+					node {
+						name
+					}
 				}
 			}
 		}
 	}
-} 
 `;
+
+/* --------------------------- HELPER FUNCTIONS ------------------------------ */
+
+// Formats seconds into hh:mm:ss
+function formatDuration(duration) {
+	let output;
+
+	let hours: any = Math.floor(duration / 3600);
+	let minutes: any = Math.floor((duration - hours * 3600) / 60);
+	let seconds: any = duration - hours * 3600 - minutes * 60;
+
+	if (hours < 10) {
+		hours = "0" + hours;
+	}
+	if (minutes < 10) {
+		minutes = "0" + minutes;
+	}
+	if (seconds < 10) {
+		seconds = "0" + seconds;
+	}
+
+	output = `${minutes}:${seconds}`;
+
+	return output;
+}
+
+/* -------------------------- RENDER VARIABLES ------------------------------- */
 
 const Thumbnail = (props) => {
 	return (
@@ -211,208 +240,138 @@ const Topic = (props) => {
 	);
 };
 
-const Title = (props) => {
+const Info = (props) => {
+	const fontStyle = {
+		fontFamily: "Retina",
+	};
 
 	return (
-		<div
-			style={{
-				display: "inline-block",
-				// background: "lightgrey",
-				width: 343,
-				fontFamily: "Retina",
-				fontSize: 18,
-				fontWeight: 800,
-				textAlign: "left",
-				color: "#0D0D0D",
-				marginLeft: 16,
-				marginRight: 16,
-			}}
+		<Stack
+			direction="vertical"
+			alignment="start"
+			distribution="start"
+			backgroundColor="white"
+			gap={4}
+			height="100%"
+			width="100%"
 		>
-			{/* {props.text} */}
-			{/* {data.video.title} */}
-		</div>
+			<div
+				style={{
+					display: "inline-block",
+					// background: "lightgrey",
+					width: 343,
+					fontFamily: "Retina",
+					fontSize: 11,
+					fontWeight: 600,
+					textAlign: "left",
+					color: "#7E7E7E",
+					marginLeft: 16,
+					marginRight: 16,
+					marginTop: 6,
+				}}
+			>
+				{props.uploadTime}
+			</div>
+
+			<div
+				style={{
+					display: "inline-block",
+					// background: "lightgrey",
+					width: 343,
+					fontFamily: "Retina",
+					fontSize: 18,
+					fontWeight: 800,
+					textAlign: "left",
+					color: "#0D0D0D",
+					marginLeft: 16,
+					marginRight: 16,
+				}}
+			>
+				{props.title}
+			</div>
+
+			{/* Channel & Verified icon */}
+			<Stack
+				direction="horizontal"
+				alignment="start"
+				distribution="start"
+				gap={4}
+				height={16}
+			>
+				<div
+					// ref={channelDetail}
+					style={{
+						display: "inline-block",
+						// background: "lightgrey",
+						width: "auto",
+						fontFamily: "Retina",
+						fontSize: 13,
+						fontWeight: 700,
+						textAlign: "left",
+						color: "#7E7E7E",
+						marginLeft: 16,
+					}}
+				>
+					{props.channel}
+				</div>
+				<Check_icon />
+			</Stack>
+
+			{/* {hasTopic && <Topic label={"topicLabel"}></Topic>} */}
+			{props.topic != null && <Topic label={props.topic}></Topic>}
+			{/* <Topic label={props.topic}></Topic> */}
+		</Stack>
 	);
 };
+
+// Card structure
+const Content = (props) => {
+	const { videoID, hasTopic, topicLabel, ...rest } = props;
+
+	const { loading, error, data } = useQuery(QUERY);
+
+	if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error :(</p>;
+        
+	
+	return (
+		<Stack
+			direction="vertical"
+			alignment="start"
+			distribution="start"
+			backgroundColor="white"
+			gap={4}
+			height="100%"
+			width="100%"
+		>
+			{/* Card thumbnail */}
+			<Thumbnail image={data.video.thumbnailURL} duration={formatDuration(data.video.duration)}></Thumbnail>
+
+			{/* Card info */}
+			<Info
+				uploadTime="10 hours ago"
+				title={data.video.title}
+				channel={data.video.channel.name}
+				topic={data.video.topics.edges[0].node.name}
+			></Info>
+		</Stack>
+	);
+};
+
+
+
+
+
+/* ----------------------------- CONTAINER ----------------------------------- */
 
 export const Card = (props) => {
 	const { videoID, hasTopic, topicLabel, ...rest } = props;
 
-	// const topicButton = React.useRef(null);
-	const channelDetail = React.useRef(null);
-
-	/* --------------------------- HELPER FUNCTIONS ------------------------------ */
-
-	// Formats seconds into hh:mm:ss
-	function formatDuration(duration) {
-		let output;
-
-		let hours: any = Math.floor(duration / 3600);
-		let minutes: any = Math.floor((duration - hours * 3600) / 60);
-		let seconds: any = duration - hours * 3600 - minutes * 60;
-
-		if (hours < 10) {
-			hours = "0" + hours;
-		}
-		if (minutes < 10) {
-			minutes = "0" + minutes;
-		}
-		if (seconds < 10) {
-			seconds = "0" + seconds;
-		}
-
-		output = `${minutes}:${seconds}`;
-
-		return output;
-	}
-
-	/* ---------------------------- STATE GRAPHQL --------------------------------- */
-	// const { loading, error, data } = useQuery(QUERY);
-	// console.log("Show data? Yes?");
-	// console.log(data);
-
-	/* -------------------------------- STATE ------------------------------------ */
-
-	const [state, setState] = React.useState({
-		// id: "x7tlu48",
-		id: videoID,
-		image: "",
-		timestamp: "",
-		uploadTime: "10 hours ago",
-		title: "Once Upon a Time in Hollywood - Official Trailer",
-		channel: "FanReviews",
-		duration: "01:01",
-		cardHeight: 300,
-	});
-
-	// React.useEffect(() => {
-	// 	setState((prevState) => ({
-	// 		...prevState,
-	// 		title: data.video.title,
-	// 	}));
-	// }, [videoID]);
-
-	// Fetches content from API
-	// React.useEffect(() => {
-	// 	fetch(
-	// 		`https://api.dailymotion.com/video/${videoID}}?fields=title%2Cthumbnail_1080_url%2Cowner.screenname%2Cid%2Cduration`
-	// 	)
-	// 		.then((response) => response.json())
-	// 		.then((data) => {
-	// 			setState((prevState) => ({
-	// 				...prevState,
-	// 				id: `${videoID}`,
-	// 				image: data["thumbnail_1080_url"],
-	// 				title: data.title,
-	// 				channel: data["owner.screenname"],
-	// 				duration: formatDuration(data.duration),
-	// 			}));
-	// 			// console.log(formatDuration(data.duration));
-	// 		})
-	// 		.then(() => {
-	// 			// Adjusts card height based on content
-
-	// 			// Check if components has been mounted
-	// 			if (!channelDetail.current) return;
-
-	// 			let updatedHeight;
-	// 			let channelDetailHeight = 17;
-	// 			let channelDetailMaxY =
-	// 				channelDetail.current.offsetParent.offsetTop + channelDetailHeight;
-	// 			let marginBottom = 20;
-
-	// 			updatedHeight = channelDetailMaxY;
-
-	// 			// Adds extra height if topic button is visible
-	// 			// hasTopic ? (updatedHeight += 43) : (updatedHeight + marginBottom)
-	// 			if (props.hasTopic) {
-	// 				updatedHeight += 43 + marginBottom;
-	// 			} else {
-	// 				updatedHeight += marginBottom;
-	// 			}
-
-	// 			// Updates state
-	// 			setState((prevState) => ({
-	// 				...prevState,
-	// 				cardHeight: updatedHeight,
-	// 			}));
-
-	// 			// console.log(
-	// 			// 	`Total height: ${channelDetail.current.offsetParent.offsetTop}`
-	// 			// );
-	// 			// console.log(`Total height: ${updatedHeight}`);
-	// 		});
-	// }, [videoID, hasTopic]);
-
 	/* ----------------------------- 🖼 RENDER ----------------------------------- */
-
 	return (
-		<Frame {...rest} height={state.cardHeight}>
+		<Frame {...rest}>
 			<ApolloProvider client={client}>
-				
-				<Stack
-					direction="vertical"
-					alignment="start"
-					distribution="start"
-					backgroundColor="white"
-					gap={4}
-					height="100%"
-					width="100%"
-					// paddingTop = {80}
-				>
-					<Span></Span>
-					<Thumbnail image={state.image} duration={state.duration}></Thumbnail>
-
-					{/* Card details */}
-					<div
-						style={{
-							display: "inline-block",
-							// background: "lightgrey",
-							width: 343,
-							fontFamily: "Retina",
-							fontSize: 11,
-							fontWeight: 600,
-							textAlign: "left",
-							color: "#7E7E7E",
-							marginLeft: 16,
-							marginRight: 16,
-							marginTop: 6,
-						}}
-					>
-						{state.uploadTime}
-					</div>
-					{/* <Title text={state.title}></Title> */}
-					<Title></Title>
-
-					{/* Channel & Verified icon */}
-					<Stack
-						direction="horizontal"
-						alignment="start"
-						distribution="start"
-						gap={4}
-						height={16}
-					>
-						<div
-							ref={channelDetail}
-							style={{
-								display: "inline-block",
-								// background: "lightgrey",
-								width: "auto",
-								fontFamily: "Retina",
-								fontSize: 13,
-								fontWeight: 700,
-								textAlign: "left",
-								color: "#7E7E7E",
-								marginLeft: 16,
-							}}
-						>
-							{state.channel}
-						</div>
-						<Check_icon />
-					</Stack>
-
-					{/* {hasTopic && renderTopic } */}
-					{hasTopic && <Topic label={topicLabel}></Topic>}
-				</Stack>
+				<Content></Content>
 			</ApolloProvider>
 		</Frame>
 	);
@@ -423,7 +382,7 @@ Card.defaultProps = {
 	width: 375,
 	background: "white",
 	videoID: "",
-	hasTopic: false,
+	hasTopic: true,
 	topicLabel: "Topic",
 };
 
