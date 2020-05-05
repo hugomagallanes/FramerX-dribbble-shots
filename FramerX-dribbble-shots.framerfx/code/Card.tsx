@@ -18,6 +18,9 @@ import { InMemoryCache } from "apollo-cache-inmemory";
 import gql from "graphql-tag";
 import { ApolloProvider, useQuery } from "@apollo/react-hooks";
 
+
+import {Span} from "./Span"
+
 /* -------------------------- FETCH OAUTH TOKEN  ----------------------------- */
 const fetchToken = async () => {
 	let key = "3cce59be389016683058";
@@ -45,29 +48,33 @@ const fetchToken = async () => {
 	// Stores token in local storage
 	localStorage.setItem("token", data.access_token);
 
-
-	console.log(`Bearer ${data.access_token}`)
+	console.log(`Bearer ${data.access_token}`);
 	// Returns oauth token
 	return `Bearer ${data.access_token}`;
 };
 
-// fetchToken()
+fetchToken()
 
 /* ------------------------- APOLLO CLIENT SETUP  ---------------------------- */
+
+localStorage.setItem(
+	"manuallyEnteredToken",
+	"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhaWQiOiIzY2NlNTliZTM4OTAxNjY4MzA1OCIsInJvbCI6IiIsInNjbyI6IiIsImx0byI6ImIzTmRXMUlFQVIwSldoc0FEZ0lHVUJSSVRSZ0RDMEJYWHhBWURBIiwiYWluIjowLCJhZGciOjAsImlhdCI6MTU4ODY3NDA5OSwiZXhwIjoxNTg4NzEwMDY1LCJkbXYiOiIxIiwiYXRwIjpudWxsLCJjYWQiOjIsImN4cCI6MiwiY2F1IjoyLCJraWQiOiJBRjg0OURENzNBNTg2M0NEN0Q5N0QwQkFCMDcyMjQzQiJ9.iI5g1gtJHTJgI6tkPPz3Lug2UK_bjfzRPPl7SrMGvlU"
+);
+
 
 // Establishes link
 const httpLink = createHttpLink({
 	uri: "https://graphql.api.dailymotion.com",
 });
 
-
 // Gets oauth token from api
 const asyncAuthLink = setContext((request) => fetchToken());
 
-
 // Passes oauth token to header
 const authLink = setContext((request, previousContext) => ({
-	headers: { authorization: `Bearer ${localStorage.getItem("token")}` },
+	headers: { authorization: `Bearer ${localStorage.getItem("manuallyEnteredToken")}` },
+	// headers: { authorization: `Bearer ${localStorage.getItem("token")}` },
 }));
 
 // Builds Apollo client request
@@ -79,24 +86,24 @@ const client = new ApolloClient({
 const QUERY = gql`
 {
 	video(xid: "x7tn87a") {
-	  id
-	  title
-	  thumbnailURL(size: "x1080")
-	  xid
-	  duration
-	  channel {
-		name
-		accountType
-	  }
-	  topics(whitelistedOnly: true, first: 2, page: 1) {
-		edges {
-		  node {
+		id
+		title
+		thumbnailURL(size: "x1080")
+		xid
+		duration
+		channel {
 			name
-		  }
+			accountType
 		}
-	  } 
+		topics(whitelistedOnly: true, first: 2, page: 1) {
+			edges {
+				node {
+					name
+				}
+			}
+		}
 	}
-  }
+} 
 `;
 
 const Thumbnail = (props) => {
@@ -205,10 +212,6 @@ const Topic = (props) => {
 };
 
 const Title = (props) => {
-	const { loading, error, data } = useQuery(QUERY);
-
-	console.log("Show data? Yes?");
-	console.log(data);
 
 	return (
 		<div
@@ -225,8 +228,8 @@ const Title = (props) => {
 				marginRight: 16,
 			}}
 		>
-			{props.text}
-			{/* {data.dog[0].breed} */}
+			{/* {props.text} */}
+			{/* {data.video.title} */}
 		</div>
 	);
 };
@@ -263,27 +266,30 @@ export const Card = (props) => {
 	}
 
 	/* ---------------------------- STATE GRAPHQL --------------------------------- */
-
-
+	// const { loading, error, data } = useQuery(QUERY);
+	// console.log("Show data? Yes?");
+	// console.log(data);
 
 	/* -------------------------------- STATE ------------------------------------ */
 
-	// const [state, setState] = React.useState({
-	// 	// id: "x7tlu48",
-	// 	id: videoID,
-	// 	image: "",
-	// 	timestamp: "",
-	// 	uploadTime: "10 hours ago",
-	// 	title: "Once Upon a Time in Hollywood - Official Trailer",
-	// 	channel: "FanReviews",
-	// 	duration: "01:01",
-	// 	cardHeight: 300,
-	// });
+	const [state, setState] = React.useState({
+		// id: "x7tlu48",
+		id: videoID,
+		image: "",
+		timestamp: "",
+		uploadTime: "10 hours ago",
+		title: "Once Upon a Time in Hollywood - Official Trailer",
+		channel: "FanReviews",
+		duration: "01:01",
+		cardHeight: 300,
+	});
 
 	// React.useEffect(() => {
-
+	// 	setState((prevState) => ({
+	// 		...prevState,
+	// 		title: data.video.title,
+	// 	}));
 	// }, [videoID]);
-
 
 	// Fetches content from API
 	// React.useEffect(() => {
@@ -342,6 +348,7 @@ export const Card = (props) => {
 	return (
 		<Frame {...rest} height={state.cardHeight}>
 			<ApolloProvider client={client}>
+				
 				<Stack
 					direction="vertical"
 					alignment="start"
@@ -352,6 +359,7 @@ export const Card = (props) => {
 					width="100%"
 					// paddingTop = {80}
 				>
+					<Span></Span>
 					<Thumbnail image={state.image} duration={state.duration}></Thumbnail>
 
 					{/* Card details */}
@@ -372,7 +380,8 @@ export const Card = (props) => {
 					>
 						{state.uploadTime}
 					</div>
-					<Title text={state.title}></Title>
+					{/* <Title text={state.title}></Title> */}
+					<Title></Title>
 
 					{/* Channel & Verified icon */}
 					<Stack
