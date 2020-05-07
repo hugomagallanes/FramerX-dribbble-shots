@@ -6,7 +6,7 @@ import {
 	ControlType,
 	useMotionValue,
 } from "framer";
-import { Image, Check_icon } from "./canvas";
+
 
 /* ------------------------------- IMPORTS  ---------------------------------- */
 
@@ -110,8 +110,7 @@ function formatDuration(duration) {
 
 /* ------------------------------ VARIABLES ---------------------------------- */
 
-let channelYPos
-
+let channelYPos;
 
 /* -------------------------- RENDER VARIABLES ------------------------------- */
 
@@ -183,10 +182,10 @@ const Topic = (props) => {
 			distribution="start"
 			gap={4}
 			// height={24 + 15 + 2 + 24}
-			height={24 + 15 + 2 }
+			height={24 + 15 + 2}
 			width="100%"
 			style={{
-				// marginTop: 12,
+				marginTop: 8,
 			}}
 		>
 			<div
@@ -231,7 +230,16 @@ const Topic = (props) => {
 					{props.label}
 				</span>
 			</div>
-			<Frame opacity={props.showMargins ? 1 : 0} width="100%" height={24} background="rgba(0, 123, 255, 0.5)" style={{color:"#4478AF", fontFamily:"Retina", fontWeight:700}} top={-4}>24px</Frame>
+			<Frame
+				opacity={props.showMargins ? 1 : 0}
+				width="100%"
+				height={24}
+				background="rgba(0, 123, 255, 0.5)"
+				style={{ color: "#4478AF", fontFamily: "Retina", fontWeight: 700 }}
+				top={-4}
+			>
+				24px
+			</Frame>
 		</Stack>
 	);
 };
@@ -245,28 +253,28 @@ const Info = (props) => {
 	const ref = React.useRef(null);
 
 	const [state, setState] = React.useState({
-		height: 100
-	})
+		height: 100,
+	});
 
-	React.useEffect(()=>{
-		console.log("Update card info height")
+	React.useEffect(() => {
+		console.log("Update card info height");
 
-		let updatedHeight = ref.current.offsetTop + ref.current.offsetHeight 
+		let updatedHeight = ref.current.offsetTop + ref.current.offsetHeight;
 
 		setState({
-			height: updatedHeight
-		})
+			height: updatedHeight,
+		});
 
 		//@ts-ignore
-		console.log(ref.current.offsetTop + ref.current.offsetHeight)
-	},[props])
+		console.log(ref.current.offsetTop + ref.current.offsetHeight);
+	}, [props]);
 
 	return (
 		<Stack
 			direction="vertical"
 			alignment="start"
 			distribution="start"
-			backgroundColor="white"
+			background="transparent"
 			// backgroundColor="transparent"
 			gap={4}
 			height="auto"
@@ -298,7 +306,8 @@ const Info = (props) => {
 					width: 343,
 					fontFamily: "Retina",
 					fontSize: 18,
-					fontWeight: 800,
+					fontWeight: 700,
+					lineHeight: "20px",
 					textAlign: "left",
 					color: "#0D0D0D",
 					marginLeft: 16,
@@ -314,7 +323,7 @@ const Info = (props) => {
 				direction="horizontal"
 				alignment="start"
 				distribution="start"
-				gap={4}
+				gap={2}
 				height={16}
 			>
 				<div
@@ -329,19 +338,30 @@ const Info = (props) => {
 						color: "#7E7E7E",
 						marginLeft: 16,
 					}}
-					// ref={(element) => {
-					// 	channelYPos = element;
-					// 	// console.log(el;e")
-					// 	// console.log(element.getBoundingClientRect())
-					// 	// console.log(element.offsetTop)
-					// }}
 				>
 					{props.channel}
 				</div>
-				<Check_icon />
+
+				<Frame
+					name="check-icon"
+					size={8}
+					borderRadius="100%"
+					background="transparent"
+				>
+					<svg viewBox="0 0 10 10">
+						<path
+							d="M5,0.833333333 C7.30118646,0.833333333 9.16666667,2.69881354 9.16666667,5 C9.16666667,7.30118646 7.30118646,9.16666667 5,9.16666667 C2.69881354,9.16666667 0.833333333,7.30118646 0.833333333,5 C0.833333333,2.69881354 2.69881354,0.833333333 5,0.833333333 Z M6.97014843,3.66370551 C6.80742998,3.50098705 6.54361124,3.50098705 6.38089278,3.66370551 L6.38089278,3.66370551 L4.17552061,5.86907768 L3.41962783,5.1131849 C3.25690937,4.95046645 2.99309063,4.95046645 2.83037217,5.1131849 C2.66765372,5.27590335 2.66765372,5.5397221 2.83037217,5.70244055 L2.83037217,5.70244055 L3.88089278,6.75296116 C4.04361124,6.91567961 4.30742998,6.91567961 4.47014843,6.75296116 L4.47014843,6.75296116 L6.97014843,4.25296116 C7.13286689,4.0902427 7.13286689,3.82642396 6.97014843,3.66370551 Z"
+							fill="#7E7E7E"
+						></path>
+					</svg>
+				</Frame>
+
+
 			</Stack>
-		
-			{props.topic != null && <Topic label={props.topic} showMargins={props.showMargins}></Topic>}
+
+			{props.topic != null && (
+				<Topic label={props.topic} showMargins={props.showMargins}></Topic>
+			)}
 		</Stack>
 	);
 };
@@ -390,7 +410,6 @@ const Content = (props) => {
 			height="100%"
 			width="100%"
 		>
-
 			{/* Card thumbnail */}
 			{props.autoplay ? (
 				<VideoPlayer videoid={data.video.xid}></VideoPlayer>
@@ -413,7 +432,18 @@ const Content = (props) => {
 						: null
 				}
 			></Info>
-			{data.video.topics.edges.length > 0 ? null : <Frame opacity={props.showMargins ? 1 : 0} width="100%" height={16} background="rgba(0, 123, 255, 0.5)" style={{color:"#4478AF", fontFamily:"Retina", fontWeight:700}} top={-4}>16px</Frame>}
+			{data.video.topics.edges.length > 0 ? null : (
+				<Frame
+					opacity={props.showMargins ? 1 : 0}
+					width="100%"
+					height={24}
+					background="rgba(0, 123, 255, 0.5)"
+					style={{ color: "#4478AF", fontFamily: "Retina", fontWeight: 700 }}
+					top={-4}
+				>
+					24px
+				</Frame>
+			)}
 		</Stack>
 	);
 };
@@ -421,8 +451,13 @@ const Content = (props) => {
 /* ----------------------------- CONTAINER ----------------------------------- */
 
 export const Card = (props) => {
-	const { videoID, autoplay: autoplayProp, height: heightProps, showMargins,  ...rest } = props;
-
+	const {
+		videoID,
+		autoplay: autoplayProp,
+		height: heightProps,
+		showMargins,
+		...rest
+	} = props;
 
 	// Initiates state
 	const [state, setState] = React.useState({
@@ -433,23 +468,21 @@ export const Card = (props) => {
 	// Updates autoplay state
 	React.useEffect(() => {
 		let updatedValue = autoplayProp;
-		setState(prevState=>({
+		setState((prevState) => ({
 			...prevState,
 			autoplay: updatedValue,
 		}));
 	}, [autoplayProp]);
 
-
-
-
-
-
-
 	/* ----------------------------- 🖼 RENDER ----------------------------------- */
 	return (
 		<Frame {...rest} height={heightProps}>
 			<ApolloProvider client={client}>
-				<Content videoID={videoID} autoplay={state.autoplay} showMargins={showMargins}></Content>
+				<Content
+					videoID={videoID}
+					autoplay={state.autoplay}
+					showMargins={showMargins}
+				></Content>
 			</ApolloProvider>
 		</Frame>
 	);
