@@ -3862,7 +3862,8 @@
         "codeComponentIdentifier" : ".\/Card.tsx_Card",
         "codeComponentProps" : {
           "autoplay" : false,
-          "videoID" : "x7tpdg5"
+          "showMargins" : false,
+          "videoID" : "x6b8e5p"
         },
         "codeOverrideEnabled" : false,
         "constraintsLocked" : false,
@@ -3878,7 +3879,7 @@
         "fillImagePixelWidth" : null,
         "fillImageResize" : "fill",
         "fillType" : "color",
-        "height" : 358,
+        "height" : 352,
         "heightType" : 0,
         "id" : "mQiMgZq4O",
         "intrinsicHeight" : 128,

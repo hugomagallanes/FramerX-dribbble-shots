@@ -108,6 +108,11 @@ function formatDuration(duration) {
 	return output;
 }
 
+/* ------------------------------ VARIABLES ---------------------------------- */
+
+let channelYPos
+
+
 /* -------------------------- RENDER VARIABLES ------------------------------- */
 
 const VideoPlayer = (props) => {
@@ -177,11 +182,11 @@ const Topic = (props) => {
 			alignment="start"
 			distribution="start"
 			gap={4}
-			height={24 + 15 + 2 + 24}
+			// height={24 + 15 + 2 + 24}
+			height={24 + 15 + 2 }
 			width="100%"
 			style={{
-				marginTop: 12,
-				// marginBottom: 24,
+				// marginTop: 12,
 			}}
 		>
 			<div
@@ -226,6 +231,7 @@ const Topic = (props) => {
 					{props.label}
 				</span>
 			</div>
+			<Frame opacity={props.showMargins ? 1 : 0} width="100%" height={24} background="rgba(0, 123, 255, 0.5)" style={{color:"#4478AF", fontFamily:"Retina", fontWeight:700}} top={-4}>24px</Frame>
 		</Stack>
 	);
 };
@@ -235,17 +241,36 @@ const Info = (props) => {
 		fontFamily: "Retina",
 	};
 
-	const channelDetail = React.useRef(null);
+	// const channelDetail = React.useRef(null);
+	const ref = React.useRef(null);
+
+	const [state, setState] = React.useState({
+		height: 100
+	})
+
+	React.useEffect(()=>{
+		console.log("Update card info height")
+
+		let updatedHeight = ref.current.offsetTop + ref.current.offsetHeight 
+
+		setState({
+			height: updatedHeight
+		})
+
+		//@ts-ignore
+		console.log(ref.current.offsetTop + ref.current.offsetHeight)
+	},[props])
 
 	return (
 		<Stack
 			direction="vertical"
 			alignment="start"
 			distribution="start"
-			// backgroundColor="lightpink"
-			backgroundColor="transparent"
+			backgroundColor="white"
+			// backgroundColor="transparent"
 			gap={4}
 			height="auto"
+			// height={state.height}
 			width="100%"
 		>
 			<div
@@ -279,6 +304,7 @@ const Info = (props) => {
 					marginLeft: 16,
 					marginRight: 16,
 				}}
+				ref={ref}
 			>
 				{props.title}
 			</div>
@@ -292,7 +318,6 @@ const Info = (props) => {
 				height={16}
 			>
 				<div
-					ref={channelDetail}
 					style={{
 						display: "inline-block",
 						// background: "lightgrey",
@@ -304,13 +329,19 @@ const Info = (props) => {
 						color: "#7E7E7E",
 						marginLeft: 16,
 					}}
+					// ref={(element) => {
+					// 	channelYPos = element;
+					// 	// console.log(el;e")
+					// 	// console.log(element.getBoundingClientRect())
+					// 	// console.log(element.offsetTop)
+					// }}
 				>
 					{props.channel}
 				</div>
 				<Check_icon />
 			</Stack>
-
-			{props.topic != null && <Topic label={props.topic}></Topic>}
+		
+			{props.topic != null && <Topic label={props.topic} showMargins={props.showMargins}></Topic>}
 		</Stack>
 	);
 };
@@ -359,6 +390,7 @@ const Content = (props) => {
 			height="100%"
 			width="100%"
 		>
+
 			{/* Card thumbnail */}
 			{props.autoplay ? (
 				<VideoPlayer videoid={data.video.xid}></VideoPlayer>
@@ -374,13 +406,14 @@ const Content = (props) => {
 				uploadTime="10 hours ago"
 				title={data.video.title}
 				channel={data.video.channel.name}
-				// topic={data.video.topics.edges >= 1 ? data.video.topics.edges[0].node.name : null}
+				showMargins={props.showMargins}
 				topic={
 					data.video.topics.edges.length > 0
 						? data.video.topics.edges[0].node.name
 						: null
 				}
 			></Info>
+			{data.video.topics.edges.length > 0 ? null : <Frame opacity={props.showMargins ? 1 : 0} width="100%" height={16} background="rgba(0, 123, 255, 0.5)" style={{color:"#4478AF", fontFamily:"Retina", fontWeight:700}} top={-4}>16px</Frame>}
 		</Stack>
 	);
 };
@@ -388,26 +421,35 @@ const Content = (props) => {
 /* ----------------------------- CONTAINER ----------------------------------- */
 
 export const Card = (props) => {
-	const { videoID, autoplay: autoplayProp, ...rest } = props;
+	const { videoID, autoplay: autoplayProp, height: heightProps, showMargins,  ...rest } = props;
 
+
+	// Initiates state
 	const [state, setState] = React.useState({
+		height: heightProps,
 		autoplay: autoplayProp,
 	});
 
+	// Updates autoplay state
 	React.useEffect(() => {
 		let updatedValue = autoplayProp;
-		setState({
+		setState(prevState=>({
+			...prevState,
 			autoplay: updatedValue,
-		});
-
-		console.log("Update autoplay state: ", state.autoplay);
+		}));
 	}, [autoplayProp]);
+
+
+
+
+
+
 
 	/* ----------------------------- 🖼 RENDER ----------------------------------- */
 	return (
-		<Frame {...rest}>
+		<Frame {...rest} height={heightProps}>
 			<ApolloProvider client={client}>
-				<Content videoID={videoID} autoplay={state.autoplay}></Content>
+				<Content videoID={videoID} autoplay={state.autoplay} showMargins={showMargins}></Content>
 			</ApolloProvider>
 		</Frame>
 	);
@@ -416,9 +458,10 @@ export const Card = (props) => {
 Card.defaultProps = {
 	height: 250,
 	width: 375,
-	background: "white",
+	background: "transparent",
 	videoID: "x7tlu48",
 	autoplay: false,
+	showMargins: false,
 };
 
 addPropertyControls(Card, {
@@ -435,14 +478,11 @@ addPropertyControls(Card, {
 		disabledTitle: "No",
 		defaultValue: false,
 	},
-
-	// topicLabel: {
-	// 	title: "Topic label",
-	// 	type: ControlType.String,
-	// 	placeholder: "Enter topic label",
-	// 	defaultValue: "Topic",
-	// 	hidden(props) {
-	// 		return props.hasTopic === false;
-	// 	},
-	// },
+	showMargins: {
+		title: "Show margins",
+		type: ControlType.Boolean,
+		enabledTitle: "Yes",
+		disabledTitle: "No",
+		defaultValue: false,
+	},
 });
