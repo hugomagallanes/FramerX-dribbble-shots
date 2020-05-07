@@ -110,6 +110,20 @@ function formatDuration(duration) {
 
 /* -------------------------- RENDER VARIABLES ------------------------------- */
 
+const VideoPlayer = (props) => {
+	return (
+		<iframe
+			//@ts-ignore
+			frameborder="0"
+			width="100%"
+			height="100%"
+			src={`https://www.dailymotion.com/embed/video/${props.videoid}?autoplay=1`}
+			allowfullscreen=""
+			allow="autoplay"
+		></iframe>
+	);
+};
+
 const Thumbnail = (props) => {
 	return (
 		<Frame
@@ -217,8 +231,6 @@ const Topic = (props) => {
 };
 
 const Info = (props) => {
-
-
 	const fontStyle = {
 		fontFamily: "Retina",
 	};
@@ -297,7 +309,7 @@ const Info = (props) => {
 				</div>
 				<Check_icon />
 			</Stack>
-			
+
 			{props.topic != null && <Topic label={props.topic}></Topic>}
 		</Stack>
 	);
@@ -305,13 +317,10 @@ const Info = (props) => {
 
 // Card structure
 const Content = (props) => {
-
-
 	/* ---------------------------- GRAPHQL QUERY  ------------------------------- */
 	const QUERY = gql`
 		{
 			video(xid: ${props.videoID}) {
-				id
 				title
 				thumbnailURL(size: "x1080")
 				xid
@@ -333,13 +342,12 @@ const Content = (props) => {
 
 	const { loading, error, data } = useQuery(QUERY);
 
-	console.log(data)
+	// console.log(data);
 
 	if (loading) return <p>Loading...</p>;
 	if (error) return <p>Error :(</p>;
 
-	/* ----------------------------- 🖼 RENDER ----------------------------------- */	
-	
+	/* ----------------------------- 🖼 RENDER ----------------------------------- */
 
 	return (
 		<Stack
@@ -352,10 +360,14 @@ const Content = (props) => {
 			width="100%"
 		>
 			{/* Card thumbnail */}
-			<Thumbnail
-				image={data.video.thumbnailURL}
-				duration={formatDuration(data.video.duration)}
-			></Thumbnail>
+			{props.autoplay ? (
+				<VideoPlayer videoid={data.video.xid}></VideoPlayer>
+			) : (
+				<Thumbnail
+					image={data.video.thumbnailURL}
+					duration={formatDuration(data.video.duration)}
+				></Thumbnail>
+			)}
 
 			{/* Card info */}
 			<Info
@@ -363,7 +375,11 @@ const Content = (props) => {
 				title={data.video.title}
 				channel={data.video.channel.name}
 				// topic={data.video.topics.edges >= 1 ? data.video.topics.edges[0].node.name : null}
-				topic={data.video.topics.edges.length > 0 ? data.video.topics.edges[0].node.name : null}
+				topic={
+					data.video.topics.edges.length > 0
+						? data.video.topics.edges[0].node.name
+						: null
+				}
 			></Info>
 		</Stack>
 	);
@@ -372,14 +388,26 @@ const Content = (props) => {
 /* ----------------------------- CONTAINER ----------------------------------- */
 
 export const Card = (props) => {
-	const { videoID, ...rest } = props;
+	const { videoID, autoplay: autoplayProp, ...rest } = props;
 
+	const [state, setState] = React.useState({
+		autoplay: autoplayProp,
+	});
+
+	React.useEffect(() => {
+		let updatedValue = autoplayProp;
+		setState({
+			autoplay: updatedValue,
+		});
+
+		console.log("Update autoplay state: ", state.autoplay);
+	}, [autoplayProp]);
 
 	/* ----------------------------- 🖼 RENDER ----------------------------------- */
 	return (
-		<Frame {...rest} >
+		<Frame {...rest}>
 			<ApolloProvider client={client}>
-				<Content videoID={videoID}></Content>
+				<Content videoID={videoID} autoplay={state.autoplay}></Content>
 			</ApolloProvider>
 		</Frame>
 	);
@@ -390,6 +418,7 @@ Card.defaultProps = {
 	width: 375,
 	background: "white",
 	videoID: "x7tlu48",
+	autoplay: false,
 };
 
 addPropertyControls(Card, {
@@ -399,13 +428,14 @@ addPropertyControls(Card, {
 		placeholder: "Enter video id",
 		defaultValue: "x7tlu48",
 	},
-	// hasTopic: {
-	// 	title: "Has Topic",
-	// 	type: ControlType.Boolean,
-	// 	enabledTitle: "Yes",
-	// 	disabledTitle: "No",
-	// 	defaultValue: true,
-	// },
+	autoplay: {
+		title: "Autoplay",
+		type: ControlType.Boolean,
+		enabledTitle: "Yes",
+		disabledTitle: "No",
+		defaultValue: false,
+	},
+
 	// topicLabel: {
 	// 	title: "Topic label",
 	// 	type: ControlType.String,
