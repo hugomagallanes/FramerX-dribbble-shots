@@ -257,7 +257,7 @@ const Info = (props) => {
 	});
 
 	React.useEffect(() => {
-		console.log("Update card info height");
+		// console.log("Update card info height");
 
 		let updatedHeight = ref.current.offsetTop + ref.current.offsetHeight;
 
@@ -266,7 +266,7 @@ const Info = (props) => {
 		});
 
 		//@ts-ignore
-		console.log(ref.current.offsetTop + ref.current.offsetHeight);
+		// console.log(ref.current.offsetTop + ref.current.offsetHeight);
 	}, [props]);
 
 	return (

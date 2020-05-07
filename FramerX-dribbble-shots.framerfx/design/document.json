@@ -155,7 +155,10 @@
             "codeComponentProps" : {
 
             },
-            "codeOverrideEnabled" : false,
+            "codeOverrideEnabled" : true,
+            "codeOverrideFile" : ".\/Overrides.tsx",
+            "codeOverrideIdentifier" : ".\/Overrides.tsx_Navtitle",
+            "codeOverrideName" : "Navtitle",
             "constraintsLocked" : false,
             "deviceType" : null,
             "exportOptions" : [
@@ -309,7 +312,6 @@
             "navigationTransitionBackdropColor" : "rgba(4,4,15,.4)",
             "navigationTransitionDirection" : "left",
             "opacity" : 1,
-            "originalFilename" : "footer-navbar@2x.png",
             "originalid" : null,
             "parentid" : "eA9LI6O6x",
             "previewSettings" : null,

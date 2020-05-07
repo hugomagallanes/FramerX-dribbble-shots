@@ -12,6 +12,9 @@ import {
 
 import { Button } from "./canvas"
 
+
+/* ------------------------------ VARIABLES ---------------------------------- */
+
 const items = ["Featured", "News", "Sports", "Entertainment", "Music"]
 
 /* --------------------------- HELPER COMPONENT ------------------------------ */
@@ -61,6 +64,12 @@ const Title = ({ text, onTap, isSelected, ...props }) => {
     )
 }
 
+{
+    /* -------------------------------------------------------------------------- /
+         Navtitle
+         ------------------------------------------------------------------------ */
+  }
+
 export function Navtitle(props) {
     const { currentlySelected, onValueChange, ...rest } = props
 
@@ -68,9 +77,42 @@ export function Navtitle(props) {
 
     // Initiates state
     const [state, setState] = React.useState({
-        selectedItem: 0,
+        selectedItem: currentlySelected,
         scrollPosition: 0,
     })
+
+    // Update selectedItem from props
+    React.useEffect(()=> {
+
+        let updatedIndex= currentlySelected
+        let updatedScrollY
+
+        // console.log("Updated state")
+
+
+        if (updatedIndex === 0) {
+            updatedScrollY = -0
+        } else if (updatedIndex === 1){
+            updatedScrollY = -103
+        } else if (updatedIndex === 2){
+            updatedScrollY = -174
+        }
+
+        // feature 0
+        // news -103
+        // sports -174
+        // entertainment -255
+        
+
+
+        setState(prevState => ({
+            ...prevState,
+            selectedItem: updatedIndex,
+            scrollPosition: updatedScrollY
+        }))
+        
+    },[currentlySelected])
+
 
     /* ------------------------------ VARIABLES ---------------------------------- */
     const controls = useAnimation()
@@ -101,6 +143,10 @@ export function Navtitle(props) {
         }))
     }
 
+    const handleScroll = (event) =>{
+        console.log(event.point.x)
+    }
+
     /* ----------------------------- 🖼 RENDER ----------------------------------- */
 
     return (
@@ -113,6 +159,7 @@ export function Navtitle(props) {
                 background="transaprent"
                 scrollAnimate={controls}
                 x={16}
+                onScroll={handleScroll}
             >
                 <Stack
                     direction="horizontal"
