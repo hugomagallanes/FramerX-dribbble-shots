@@ -3230,10 +3230,13 @@
         "codeComponentIdentifier" : ".\/Card.tsx_Card",
         "codeComponentProps" : {
           "autoplay" : false,
-          "showMargins" : true,
+          "showMargins" : false,
           "videoID" : "x7tlu48"
         },
-        "codeOverrideEnabled" : false,
+        "codeOverrideEnabled" : true,
+        "codeOverrideFile" : ".\/SimpleOverride.tsx",
+        "codeOverrideIdentifier" : ".\/SimpleOverride.tsx_CardRef",
+        "codeOverrideName" : "CardRef",
         "constraintsLocked" : false,
         "deviceType" : null,
         "exportOptions" : [
@@ -3247,7 +3250,7 @@
         "fillImagePixelWidth" : null,
         "fillImageResize" : "fill",
         "fillType" : "color",
-        "height" : 412,
+        "height" : 380,
         "heightType" : 0,
         "id" : "mQiMgZq4O",
         "intrinsicHeight" : 128,
