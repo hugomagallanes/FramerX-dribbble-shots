@@ -122,6 +122,13 @@ let channelYPos;
 
 const VideoPlayer = (props) => {
 	return (
+		<div
+			style={{
+				background:"#0d0d0d",
+				width: "100%",
+				height: 212
+			}}
+		>
 		<iframe
 			//@ts-ignore
 			frameborder="0"
@@ -131,6 +138,7 @@ const VideoPlayer = (props) => {
 			allowfullscreen=""
 			allow="autoplay"
 		></iframe>
+		</div>
 	);
 };
 
@@ -389,6 +397,8 @@ const Info = (props) => {
 
 // Card structure
 const Content = (props) => {
+// const Content = React.forwardRef((props: any, ref:any) => {
+
 	/* ---------------------------- GRAPHQL QUERY  ------------------------------- */
 	const QUERY = gql`
 		{
@@ -427,6 +437,9 @@ const Content = (props) => {
 			height="100%"
 			width="100%"
 		>
+
+			{/* <div ref={props.refTest}></div> */}
+
 			{/* Card thumbnail */}
 			{props.autoplay ? (
 				<VideoPlayer videoid={data.video.xid}></VideoPlayer>
@@ -466,7 +479,7 @@ const Content = (props) => {
 				</Frame>
 			)}
 		</Stack>
-	);
+	)
 };
 
 
@@ -492,12 +505,14 @@ export const Card = (props) => {
 	}, [autoplayProp]);
 
 
+	// const refTest: any = React.useRef(null)
 
 
 	/* ----------------------------- 🖼 RENDER ----------------------------------- */
 	return (
 			<ApolloProvider client={client}>
 				<Content
+					// ref={refTest}
                     videoID={videoID}
                     autoplay={state.autoplay}
                     showMargins={showMargins}

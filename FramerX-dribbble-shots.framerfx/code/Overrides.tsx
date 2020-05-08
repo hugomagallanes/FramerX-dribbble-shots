@@ -7,12 +7,64 @@ import { Data, Override, motionValue, useAnimation } from "framer";
 const scrollY = motionValue(0)
 
 
+const cardsPos = {
+    card01: {
+        minY: 40,
+        maxY: 400
+    },
+    card02: {
+        minY: 400,
+        maxY: 713
+    },
+    card03: {
+        minY: 713,
+        maxY: 1073
+    },
+    card04: {
+        minY: 1073,
+        maxY: 1433
+    },
+    card05: {
+        minY: 1593,
+        maxY: 1954
+    },
+    card06: {
+        minY: 1954,
+        maxY: 2314
+    },
+    card07: {
+        minY: 2314,
+        maxY: 2674
+    },
+    card08:{
+        minY: 2674,
+        maxY: 3062
+    },
+    card09:{
+        minY: 3146,
+        maxY: 3459
+    },
+    card10:{
+        minY: 3459,
+        maxY: 3772
+    },
+    card11:{
+        minY: 3772,
+        maxY: 4085
+    },
+    card12:{
+        minY: 4085,
+        maxY: 4425
+    },
+}
+
+
+
 /* -------------------------------- STATE ------------------------------------ */
 
 const data = Data({
 	current: 0,
     scrollYOffset: 0,
-    targetY: 0,
 });
 
 
@@ -63,7 +115,6 @@ const scrollToSection = (tappedItem) => {
 
 
 
-
 // Apply to scroll
 export const Scroll: Override = (props) => {
 	return {
@@ -107,81 +158,42 @@ export const Navtitle: Override = () => {
 };
 
 
-// Line override
-export function GetTargetPosY(props): Override {
-    // Don't know what it does
-    const ref = useCallback(elem => (data.targetY = elem.offsetTop), [])
+// OVERRIDE - Toggles card autoplay. Apply to card
+export const HandleCard: Override = (props) => {
 
-    return {
-        ref: ref,
-    }
-}
+    // Creates a ref
+	const ref: any = useRef(null);
 
-// List element override
-export function HandleElement(props): Override {
-    const ref: any = useRef()
-    const controls = useAnimation()
+    // Initiates state
+    const [playVideo, setPlayVideo] = useState(false)
 
-    // console.log(props.name, props.height)
+	useEffect(() => {
 
-    let cardtopY = props.top
-    let cardHeight = cardtopY + props.height
-
-    // console.log("name: ", props.name, "y: ", cardtopY, "height: ", cardHeight)
-
-
-
-     const variants = {
-        default: { background: "orange" },
-        active: { background: "teal" },
-    }
-
-    const [state, setState] = useState({
-        isAutoplayOn: false
-    })
-
-
-
-    
-
-    function setActive(scrollY, y, height, target) {
-        const topLine = y + scrollY
-        const bottomLine = topLine + height
+        const layerName = ref.current.props.name
+        const topLine = cardsPos[layerName].minY
+        const bottomLine = cardsPos[layerName].maxY
         
 
-        // console.log("Name: ", props.name, "Scroll Y :" ,scrollY, "TopLine: ", cardtopY, "BottomLine: ",  cardHeight, "Data.targetY", data.targetY)
-       
+        // console.log(layerName,topLine,bottomLine)
 
-        controls.start(
-            // Important
-            topLine < data.targetY && bottomLine > data.targetY
-                ? "active"
-                : "default"
-        )
+		const unsubscribe = scrollY.onChange((scrollY) => {
+            const targetY = Math.abs(scrollY) + 200
 
-        // topLine < data.targetY && bottomLine > data.targetY ? setState({isAutoplayOn: true}) : setState({isAutoplayOn: false}
+            if (topLine < targetY && bottomLine > targetY) {
+                console.log(`The ${layerName} is now selected`)
+                setPlayVideo(true)
+            } else {
+                setPlayVideo(false)
+            }
+        });
 
-        
-    }
-    useEffect(() => {
-        if (ref) {
-            const y = ref.current.offsetTop
-            const unsubscribe = scrollY.onChange(scrollY => {
+        return () => unsubscribe()
 
-                // setActive(scrollY, y, props.height, data.targetY)
-                console.log("Name:", props.name ,"Ref.y :", y)
-   
-            })
+	}, []);
 
-           
-            // Why return a callback function?
-            return () => unsubscribe()
-        }
-    }, [])
-    return {
-        ref: ref,
-        variants: variants,
-        animate: controls,
-        autoplay: state.isAutoplayOn
-    }
-}
+	return {
+        autoplay: playVideo,
+        ref: ref
+	};
+};
+
