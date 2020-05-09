@@ -15,6 +15,8 @@
 	"author": "Hugo Magalhaes",
 	"dependencies": {
 		"@framer/dailymotion.web-design-system": "^1.14.0",
+		"@framer/gusso.magic-move": "^3.9.0",
+		"@framer/jordanrobertdobson.text-color-tool": "^1.0.0",
 		"@framer/kasimir.iphone-x-kit": "^1.21.0",
 		"@framer/steveruizok.education": "^1.207.0"
 	}
