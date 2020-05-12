@@ -86,10 +86,12 @@ const switchesNavtitle = (scrollY) => {
         // console.log("News", updateCurrent)
         // updateCurrent = 1
         data.current = 1
-    } else if (scrollY <= -3112) {
+    } else if (scrollY <= -3062 && scrollY > -4508) {
         // console.log("Sports", updateCurrent)
         // updateCurrent = 2
         data.current = 2
+    } else if (scrollY <= -4508) {
+        data.current = 3
     }
 
     // console.log("Current selected: ", data.current)
@@ -104,7 +106,9 @@ const scrollToSection = (tappedItem) => {
 		return -1554;
 	} else if (tappedItem === 2) {
 		return -3112;
-	}
+	} else if (tappedItem === 3) {
+        return -4552
+    }
 };
 
 
@@ -142,9 +146,11 @@ export const Scroll: Override = (props) => {
             } else if (scrollY <= -1508 && scrollY > -3062) {
                 // console.log("News")
                 data.current = 1
-            } else if (scrollY <= -3062) {
+            } else if (scrollY <= -3062 && scrollY > -4508) {
                 // console.log("Sports")
                 data.current = 2
+            } else if (scrollY <= -4508) {
+                data.current = 3
             }
         },
 	};

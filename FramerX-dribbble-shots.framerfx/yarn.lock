@@ -209,6 +209,16 @@
     react-truncate "^2.4.0"
     styled-components "^4.4.1"
 
+"@framer/framer.device-hand-iphone-1@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.framer.com/@framer/framer.device-hand-iphone-1/-/@framer/framer.device-hand-iphone-1-1.0.0.tgz#0fbfd5313694b8834b91b138c9a961e59cfea1fd"
+  integrity sha512-Ed19vZ83g7h27/HBTnLddyBtO8pY6KcrqoSmeGPJYnnWltFgrbS+QWzLo12UQqnHjcK0efyniWoT7H73qhJYUQ==
+
+"@framer/framer.device-hand-iphone-2@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.framer.com/@framer/framer.device-hand-iphone-2/-/@framer/framer.device-hand-iphone-2-1.0.0.tgz#201c6b49236e837f931d0240cb434e396151d4f0"
+  integrity sha512-5EX3fF8B0t419kRFa0/NpHbmV/ffrH4bB1/0neoGUixea4VQ2ZX1RdAL/xq8QWTGDgaHGDKnrW39cOl8GIhFTA==
+
 "@framer/framer.device-skin-apple-iphone-xs-spacegrey@^1.0.0":
   version "1.0.0"
   resolved "https://registry.framer.com/@framer/framer.device-skin-apple-iphone-xs-spacegrey/-/@framer/framer.device-skin-apple-iphone-xs-spacegrey-1.0.0.tgz#d9f524f5a6a4afe8cb413c00f3f16fe4d52ee09e"
@@ -240,6 +250,11 @@
     mapbox-gl "^1.0.0"
     markdown-to-jsx "^6.10.2"
     react-select "^3.0.3"
+
+"@framer/viktorrenkema.preview-magic@^1.3.0":
+  version "1.3.0"
+  resolved "https://registry.framer.com/@framer/viktorrenkema.preview-magic/-/@framer/viktorrenkema.preview-magic-1.3.0.tgz#301a46be61f629c3dfd6f56278041b0518759a35"
+  integrity sha512-FR3wkHm30CEcJLt0vFPk7GgD8JvCgGnBwPRaQuRFsit4ivVQeg1o6VQFOK7enuADnH/NDEh3dzqD7bUVt5Fa5g==
 
 "@mapbox/geo-viewport@^0.4.0":
   version "0.4.0"
