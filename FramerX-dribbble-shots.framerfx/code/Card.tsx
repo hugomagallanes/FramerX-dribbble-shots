@@ -410,6 +410,7 @@ const Content = (props) => {
 				channel {
 					name
 					accountType
+					displayName
 				}
 				topics(whitelistedOnly: true, first: 2, page: 1) {
 					edges {
@@ -454,7 +455,7 @@ const Content = (props) => {
 			<Info
 				uploadTime="10 hours ago"
 				title={data.video.title}
-				channel={data.video.channel.name}
+				channel={data.video.channel.displayName}
 				showMargins={props.showMargins}
 				topic={
 					data.video.topics.edges.length > 0
