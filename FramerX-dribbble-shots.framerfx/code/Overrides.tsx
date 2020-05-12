@@ -78,15 +78,15 @@ const switchesNavtitle = (scrollY) => {
 
     let updateCurrent = 0
 
-	if (scrollY <= 0 && scrollY > -1564) {
-        // console.log("Featured", updateCurrent)
+	if (scrollY <= 0 && scrollY > -1554) {
+        console.log("Featured", updateCurrent)
         // updateCurrent = 0
         data.current = 0
-	} else if (scrollY <= -1564 && scrollY > -3166) {
+	} else if (scrollY <= -1554 && scrollY > -3112) {
         // console.log("News", updateCurrent)
         // updateCurrent = 1
         data.current = 1
-    } else if (scrollY <= -3166) {
+    } else if (scrollY <= -3112) {
         // console.log("Sports", updateCurrent)
         // updateCurrent = 2
         data.current = 2
@@ -101,9 +101,9 @@ const scrollToSection = (tappedItem) => {
 	if (tappedItem === 0) {
 		return 0;
 	} else if (tappedItem === 1) {
-		return -1564;
+		return -1554;
 	} else if (tappedItem === 2) {
-		return -3166;
+		return -3112;
 	}
 };
 
@@ -121,24 +121,28 @@ export const Scroll: Override = (props) => {
          // Listens to scroll event and stores Y offset in motionValue
          contentOffsetY: scrollY,
 
+
 		scrollAnimate: {
 			y: data.scrollYOffset,
-			transition: { ease: "easeInOut", duration: 1 },
+			transition: { ease: "easeInOut", duration: .9 },
 		},
 
 		onScroll(event) {
             // Updates navtitle current based on scroll Y position
 
             //@ts-ignore
+            console.log(event.point.y)
+
+            //@ts-ignore
             let scrollY = event.point.y
 
-            if (scrollY <= 0 && scrollY > -1564) {
+            if (scrollY <= 0 && scrollY > -1508) {
                 // console.log("Featured")
                 data.current = 0
-            } else if (scrollY <= -1564 && scrollY > -3166) {
+            } else if (scrollY <= -1508 && scrollY > -3062) {
                 // console.log("News")
                 data.current = 1
-            } else if (scrollY <= -3166) {
+            } else if (scrollY <= -3062) {
                 // console.log("Sports")
                 data.current = 2
             }
@@ -180,8 +184,9 @@ export const HandleCard: Override = (props) => {
             const targetY = Math.abs(scrollY) + 200
 
             if (topLine < targetY && bottomLine > targetY) {
-                console.log(`The ${layerName} is now selected`)
-                setPlayVideo(true)
+                // console.log(`The ${layerName} is now selected`)
+                // setPlayVideo(true)
+                setPlayVideo(false)
             } else {
                 setPlayVideo(false)
             }

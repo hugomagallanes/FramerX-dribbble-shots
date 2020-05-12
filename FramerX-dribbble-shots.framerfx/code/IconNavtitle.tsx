@@ -5,25 +5,35 @@ import {
 } from "framer";
 
 
-export const IconNavtitle = ({isActive}) => {
+export const IconNavtitle = (props) => {
 
+	// Destructure props
+	const {isActive, ...rest} = props
 
+	// Initiates state
 	const [active,setActive] = React.useState(isActive) 
 
 	// Set initial state based on prop
 	React.useEffect(()=>{
-		setActive(isActive)
-	},[])
+		setActive(true)
+	},[isActive])
 
+	// Handle tap
 	const handleTap = () => {
-		setActive(!active)
-		// console.log(`Changed state to ${active}`)
+		let updatedValue = !active
+
+		// Shares updated value
+		props.onValueChange(updatedValue)
+
+		// Updates state
+		setActive(updatedValue)
 	}
 
     return (
 		<Frame
+			{...rest}
 			size={16}
-			background={null}
+			background="transparent"
 			style={{
 				zIndex: 10
 			}}
@@ -34,17 +44,29 @@ export const IconNavtitle = ({isActive}) => {
 			}}
 		>
 
+
 			<Frame 
 				radius={3}
-				width={16}
 				height={2}
+				originX={0}
+				top={2}
+				// width={active ? 14 : 16}
+				// background={active ? "white" : "#0d0d0d"}
+				// rotate={active ? 45 : 0}
+				initial={{
+					width: 16,
+					background: "#0d0d0d",
+					rotate: 0
+				}}
 				animate={{
-					background: active ? "white" : "0d0d0d",
-					top: active ? 2 : 2,
+					background: active ? "white" : "#0d0d0d",
 					rotate: active ? 45 : 0,
 					width: active ? 14 : 16
 				}}
-				originX={0}
+				style={{
+					zIndex: 10
+				}}
+
 			></Frame>
 
 
@@ -52,7 +74,7 @@ export const IconNavtitle = ({isActive}) => {
 				radius={3}
 				width={10}
 				height={2}
-				background="0d0d0d"
+				background="#0d0d0d"
 				animate={{
 					opacity: active ? 0 : 1,
 				}}
@@ -64,20 +86,28 @@ export const IconNavtitle = ({isActive}) => {
 
 			<Frame 
 				radius={3}
-				// width={13}
 				height={2}
+				originX={0}
+				bottom={2}
+				initial={{
+					width: 10,
+					background: "#0d0d0d",
+					rotate: 0
+				}}
 				animate={{
-					background: active ? "white" : "0d0d0d",
-					bottom: active ? 2 : 2,
+					background: active ? "white" : "#0d0d0d",
 					rotate: active ? -45 : 0,
 					width: active ? 14 : 10
 				}}
-				originX={0}
+				style={{
+					zIndex: 10
+				}}
 			></Frame>
 		</Frame>
 	)
 }
 
 IconNavtitle.defaultProps = {
-	isActive: false
+	isActive: false,
+	onValueChange: value => null,
 }
