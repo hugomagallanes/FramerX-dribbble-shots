@@ -2229,10 +2229,7 @@
                   "showMargins" : false,
                   "videoID" : "x7mohic"
                 },
-                "codeOverrideEnabled" : true,
-                "codeOverrideFile" : ".\/Overrides.tsx",
-                "codeOverrideIdentifier" : ".\/Overrides.tsx_HandleCard",
-                "codeOverrideName" : "HandleCard",
+                "codeOverrideEnabled" : false,
                 "constraintsLocked" : false,
                 "deviceType" : null,
                 "exportOptions" : [
@@ -2500,7 +2497,7 @@
         "fillImageResize" : "fill",
         "fillType" : "color",
         "guidesX" : [
-
+          230
         ],
         "guidesY" : [
 
@@ -3966,10 +3963,7 @@
                   "dragEnabled" : true,
                   "wheelEnabled" : true
                 },
-                "codeOverrideEnabled" : true,
-                "codeOverrideFile" : ".\/Overrides.tsx",
-                "codeOverrideIdentifier" : ".\/Overrides.tsx_Scroll",
-                "codeOverrideName" : "Scroll",
+                "codeOverrideEnabled" : false,
                 "constraintsLocked" : false,
                 "deviceType" : null,
                 "exportOptions" : [
@@ -4023,10 +4017,7 @@
                 "codeComponentProps" : {
 
                 },
-                "codeOverrideEnabled" : true,
-                "codeOverrideFile" : ".\/Overrides.tsx",
-                "codeOverrideIdentifier" : ".\/Overrides.tsx_Navtitle",
-                "codeOverrideName" : "Navtitle",
+                "codeOverrideEnabled" : false,
                 "constraintsLocked" : false,
                 "deviceType" : null,
                 "exportOptions" : [
@@ -4302,7 +4293,7 @@
             "isMaster" : false,
             "isTarget" : false,
             "left" : 0,
-            "locked" : false,
+            "locked" : true,
             "name" : "app-home",
             "navigationTarget" : null,
             "navigationTransition" : "push",
@@ -5560,38 +5551,38 @@
                                   ],
                                   "inlineStyleRanges" : [
                                     {
-                                      "length" : 14,
+                                      "length" : 16,
                                       "offset" : 0,
                                       "style" : "FONT:Retina-Regular"
                                     },
                                     {
-                                      "length" : 14,
+                                      "length" : 16,
                                       "offset" : 0,
                                       "style" : "COLOR:rgb(255, 255, 255)"
                                     },
                                     {
-                                      "length" : 14,
+                                      "length" : 16,
                                       "offset" : 0,
                                       "style" : "SIZE:15"
                                     },
                                     {
-                                      "length" : 14,
+                                      "length" : 16,
                                       "offset" : 0,
                                       "style" : "LINEHEIGHT:1.3"
                                     },
                                     {
-                                      "length" : 14,
+                                      "length" : 16,
                                       "offset" : 0,
                                       "style" : "ALIGN:left"
                                     }
                                   ],
                                   "key" : "1panp",
-                                  "text" : "Something else",
+                                  "text" : "In the spotlight",
                                   "type" : "unstyled"
                                 }
                               ],
                               "cached" : {
-                                "html" : "<div class='DraftEditor-alignLeft'><div data-offset-key=\"1panp-0-0\" class=\"public-DraftStyleDefault-block public-DraftStyleDefault-ltr\"><span data-offset-key=\"1panp-0-0\" style=\"tab-size:4;font-family:&quot;Retina-Regular&quot;, &quot;Retina&quot;, serif;-webkit-text-fill-color:rgb(255, 255, 255);font-size:15px;letter-spacing:0px;line-height:1.3;font-weight:400\"><span data-text=\"true\">Something else<\/span><\/span><\/div><\/div>",
+                                "html" : "<div class='DraftEditor-alignLeft'><div data-offset-key=\"1panp-0-0\" class=\"public-DraftStyleDefault-block public-DraftStyleDefault-ltr\"><span data-offset-key=\"1panp-0-0\" style=\"tab-size:4;font-family:&quot;Retina-Regular&quot;, &quot;Retina&quot;, serif;-webkit-text-fill-color:rgb(255, 255, 255);font-size:15px;letter-spacing:0px;line-height:1.3;font-weight:400\"><span data-text=\"true\">In the spotlight<\/span><\/span><\/div><\/div>",
                                 "os" : "macos 10_15 framerx",
                                 "size" : {
                                   "height" : 19,
@@ -6494,6 +6485,68 @@
             "visible" : true,
             "width" : 351,
             "widthType" : 0
+          },
+          {
+            "__class" : "CodeComponentNode",
+            "aspectRatio" : null,
+            "bottom" : 50,
+            "centerAnchorX" : 0.5,
+            "centerAnchorY" : 0.83682266009852213,
+            "children" : [
+
+            ],
+            "clip" : true,
+            "codeComponentIdentifier" : "@framer\/viktorrenkema.preview-magic\/.\/PreviewMagic.tsx_PreviewMagic",
+            "codeComponentProps" : {
+              "Color" : "rgba(86, 199, 255, 0)",
+              "CSS" : "linear-gradient(#e66465, #9198e5)",
+              "LinearEnd" : "#FF37A9",
+              "LinearStart" : "#FFA115",
+              "RadialEnd" : "#FF3040",
+              "RadialStart" : "#A11193",
+              "Repeat" : "no-repeat",
+              "Size" : "auto",
+              "Type" : "Color"
+            },
+            "codeOverrideEnabled" : false,
+            "constraintsLocked" : false,
+            "deviceType" : null,
+            "exportOptions" : [
+
+            ],
+            "fillColor" : "rgba(255,255,255,1)",
+            "fillEnabled" : false,
+            "fillImage" : null,
+            "fillImageOriginalName" : null,
+            "fillImagePixelHeight" : null,
+            "fillImagePixelWidth" : null,
+            "fillImageResize" : "fill",
+            "fillType" : "color",
+            "height" : 165,
+            "heightType" : 0,
+            "id" : "OAPW2kmPf",
+            "intrinsicHeight" : 300,
+            "intrinsicWidth" : 300,
+            "left" : 0,
+            "locked" : false,
+            "name" : null,
+            "opacity" : 1,
+            "originalid" : null,
+            "parentid" : "M0xcFxbLH",
+            "previewSettings" : null,
+            "radius" : 0,
+            "radiusBottomLeft" : 0,
+            "radiusBottomRight" : 0,
+            "radiusIsRelative" : false,
+            "radiusPerCorner" : false,
+            "radiusTopLeft" : 0,
+            "radiusTopRight" : 0,
+            "right" : 0,
+            "rotation" : 0,
+            "top" : null,
+            "visible" : true,
+            "width" : 375,
+            "widthType" : 0
           }
         ],
         "clip" : true,
@@ -6535,7 +6588,16 @@
         "opacity" : 1,
         "originalid" : null,
         "parentid" : "R16QFMGJh",
-        "previewSettings" : null,
+        "previewSettings" : {
+          "__class" : "PreviewSettings",
+          "bezel" : true,
+          "deviceType" : "framer\/FramerAppleIPhoneXS",
+          "responsive" : false,
+          "rotate" : false,
+          "skin" : "Space Gray",
+          "touch" : true,
+          "zoom" : -1
+        },
         "radius" : 0,
         "radiusBottomLeft" : 0,
         "radiusBottomRight" : 0,
@@ -6553,7 +6615,7 @@
       }
     ],
     "guidesX" : [
-      1416
+
     ],
     "guidesY" : [
 
